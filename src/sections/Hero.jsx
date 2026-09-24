@@ -7,89 +7,94 @@ export default function Hero() {
     const el = textRef.current;
     if (el) {
       el.style.opacity = '0';
-      el.style.transform = 'translateX(-30px)';
+      el.style.transform = 'translateY(30px)';
       setTimeout(() => {
-        el.style.transition = 'opacity 1s ease, transform 1s ease';
+        el.style.transition = 'opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1)';
         el.style.opacity = '1';
-        el.style.transform = 'translateX(0)';
+        el.style.transform = 'translateY(0)';
       }, 200);
     }
   }, []);
 
   return (
-    <section id="home" className="relative min-h-screen flex items-center overflow-hidden bg-green-50 pt-20 pb-16">
-      {/* Floating particles */}
+    <section id="home" className="relative min-h-screen flex items-center overflow-hidden bg-white pt-20 pb-16 font-sans">
+      {/* Abstract Modern Background Shapes */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(8)].map((_, i) => (
-          <div key={i} className="absolute rounded-full bg-green-400/20"
-            style={{ width: `${Math.random() * 6 + 2}px`, height: `${Math.random() * 6 + 2}px`, left: `${Math.random() * 100}%`, top: `${Math.random() * 100}%`, animation: `float ${4 + Math.random() * 6}s ease-in-out infinite`, animationDelay: `${Math.random() * 4}s` }} />
-        ))}
+        <div className="absolute -top-[20%] -right-[10%] w-[70%] h-[70%] rounded-full bg-green-50/80 blur-3xl" />
+        <div className="absolute bottom-[0%] -left-[10%] w-[50%] h-[50%] rounded-full bg-yellow-50/60 blur-3xl" />
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full mt-10">
-        <div className="flex flex-col lg:flex-row items-center gap-12 lg:gap-16">
-          
-          {/* Left Content */}
-          <div ref={textRef} className="w-full lg:w-1/2 text-left">
-            <div className="inline-flex items-center gap-2 glass-card rounded-full px-4 py-1.5 mb-6 border border-green-700/10">
-              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-900 text-xs font-bold tracking-widest uppercase">Yala National Park · Sri Lanka</span>
-            </div>
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-16">
 
-            <h1 className="text-5xl sm:text-6xl md:text-7xl font-black leading-tight mb-6">
-              <span className="text-green-900">Explore the Wild</span>
-              <br />
-              <span className="gradient-text">Heart of Yala</span>
+          {/* Left Content */}
+          <div ref={textRef} className="w-full lg:w-[55%] text-left">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-neutral-900 leading-[1.1] mb-6">
+              Experience the <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-green-600 to-emerald-400">Untamed Wild</span>
             </h1>
 
-            <p className="text-lg text-green-900 mb-10 leading-relaxed max-w-xl">
-              Sri Lanka's premier jeep safari service in Yala National Park — home to the world's highest density of wild leopards, majestic elephants, sloth bears, and over 200 bird species.
+            <p className="text-lg md:text-xl text-neutral-500 mb-10 leading-relaxed max-w-lg font-light">
+              Embark on a modern safari adventure. Discover the highest density of wild leopards and majestic elephants in their natural habitat.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 mb-12">
+            <div className="flex flex-col sm:flex-row gap-4 mb-14">
               <button id="hero-book-btn" onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 text-green-50 font-bold text-base rounded-full hover:shadow-2xl hover:shadow-green-500/40 hover:scale-105 transition-all duration-300">
-                Book Your Jeep Safari →
+                className="w-full sm:w-auto px-8 py-4 bg-neutral-900 text-white font-medium text-sm rounded-full hover:bg-green-600 hover:shadow-lg hover:shadow-green-600/20 hover:-translate-y-0.5 transition-all duration-300">
+                Book Safari Now
               </button>
               <button id="hero-gallery-btn" onClick={() => document.querySelector('#gallery')?.scrollIntoView({ behavior: 'smooth' })}
-                className="w-full sm:w-auto px-8 py-4 glass-card border border-green-700/20 text-green-900 font-semibold text-base rounded-full hover:bg-green-400/10 transition-all duration-300">
-                ▷ View Wildlife Gallery
+                className="w-full sm:w-auto px-8 py-4 bg-white border border-neutral-200 text-neutral-700 font-medium text-sm rounded-full hover:border-neutral-300 hover:bg-neutral-50 transition-all duration-300 flex items-center justify-center gap-2">
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                View Gallery
               </button>
             </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-4 sm:gap-8 border-t border-green-700/10 pt-8 max-w-xl">
+            {/* Modern Stats */}
+            <div className="flex items-center gap-8 md:gap-12 max-w-xl">
               {[
-                { value: '10+', label: 'Years in Yala' },
-                { value: '30+', label: 'Expert Guides' },
-                { value: '99%', label: 'Happy Guests' },
+                { value: '10+', label: 'Years Exp.' },
+                { value: '4.9', label: 'Rating', icon: '⭐' },
+                { value: '24/7', label: 'Support' },
               ].map((stat) => (
-                <div key={stat.label}>
-                  <div className="stat-number text-2xl sm:text-3xl font-black">{stat.value}</div>
-                  <div className="text-green-900 text-xs sm:text-sm tracking-wide mt-1 font-medium">{stat.label}</div>
+                <div key={stat.label} className="flex flex-col">
+                  <div className="text-2xl sm:text-3xl font-bold text-neutral-900 flex items-center gap-1">
+                    {stat.value}
+                    {stat.icon && <span className="text-lg">{stat.icon}</span>}
+                  </div>
+                  <div className="text-neutral-500 text-sm mt-1">{stat.label}</div>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Right Image */}
-          <div className="w-full lg:w-1/2 relative hidden md:block">
-            {/* Decorative background blob */}
-            <div className="absolute inset-0 bg-gradient-to-tr from-green-300 to-green-100 rounded-full blur-3xl opacity-60 animate-pulse transform scale-110" />
-            
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl border-[6px] border-white/40 transform hover:scale-[1.02] transition-transform duration-500">
-              <img src="/images/hero_bg.jpg" alt="Safari Jeep in Yala" className="w-full h-full object-cover aspect-[4/3]" />
-              
-              {/* Floating stat badge on image */}
-              <div className="absolute bottom-6 left-6 glass-card bg-white/70 backdrop-blur-md rounded-2xl px-5 py-4 shadow-xl border border-white/50">
-                <div className="text-green-900 text-3xl font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>1,000+</div>
-                <div className="text-green-900 text-xs tracking-wide font-bold uppercase mt-1">Safaris Completed</div>
+          {/* Right Sticker Area */}
+          <div className="w-full lg:w-[45%] relative hidden md:flex items-center justify-center min-h-[400px]">
+            {/* Soft backdrop */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-green-100/50 to-transparent rounded-full blur-3xl opacity-70 transform scale-150" />
+
+            <div className="relative group">
+              {/* Floating Jeep Sticker */}
+              <div className="animate-bounce-slow relative z-10 transform group-hover:scale-105 transition-transform duration-500 cursor-pointer">
+                {/* Thick white border effect (sticker) */}
+                <div className="text-[10rem] md:text-[14rem] leading-none" style={{ filter: 'drop-shadow(0 25px 25px rgb(0 0 0 / 0.15))' }}>
+                  <div className="relative">
+                    <span className="absolute inset-0 text-white" style={{ WebkitTextStroke: '16px white' }}>🚙</span>
+                    <span className="relative z-10">🚙</span>
+                  </div>
+                </div>
+
+                {/* Animated Dust Particles */}
+                <div className="absolute -bottom-4 -left-4 w-12 h-12 bg-neutral-200/50 rounded-full blur-md animate-ping" style={{ animationDuration: '2s' }} />
+                <div className="absolute bottom-2 -right-4 w-8 h-8 bg-neutral-200/60 rounded-full blur-md animate-ping" style={{ animationDuration: '2.5s', animationDelay: '0.5s' }} />
               </div>
 
-              {/* Sri Lanka badge on image */}
-              <div className="absolute top-6 right-6 glass-card bg-white/70 backdrop-blur-md rounded-2xl px-4 py-3 shadow-xl border border-white/50 text-center">
-                <div className="text-2xl">🇱🇰</div>
-                <div className="text-green-900 text-[10px] font-bold tracking-wider uppercase mt-1">Sri Lanka</div>
+              {/* Modern floating badge */}
+              <div className="absolute -right-8 top-10 bg-white/80 backdrop-blur-md rounded-2xl px-5 py-3 shadow-lg border border-white/60 animate-float" style={{ animationDelay: '1s' }}>
+                <div className="flex items-center gap-2">
+                  <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+                  <span className="text-sm font-semibold text-neutral-800">Booking Open</span>
+                </div>
               </div>
             </div>
           </div>
@@ -99,8 +104,18 @@ export default function Hero() {
 
       <style>{`
         @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0.3; }
-          50% { transform: translateY(-20px) rotate(180deg); opacity: 0.8; }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-15px); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
+        }
+        @keyframes bounce-slow {
+          0%, 100% { transform: translateY(-5%); animation-timing-function: cubic-bezier(0.8, 0, 1, 1); }
+          50% { transform: translateY(0); animation-timing-function: cubic-bezier(0, 0, 0.2, 1); }
+        }
+        .animate-bounce-slow {
+          animation: bounce-slow 3s infinite;
         }
       `}</style>
     </section>
