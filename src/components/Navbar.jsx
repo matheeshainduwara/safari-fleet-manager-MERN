@@ -21,7 +21,7 @@ export default function Navbar() {
         const el = document.getElementById(id);
         if (el) {
           const rect = el.getBoundingClientRect();
-          if (rect.top <= 100 && rect.bottom >= 100) { setActiveSection(id); break; }
+          if (rect.top <= 150 && rect.bottom >= 150) { setActiveSection(id); break; }
         }
       }
     };
@@ -35,70 +35,69 @@ export default function Navbar() {
   };
 
   return (
-    <nav id="navbar" className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'navbar-scrolled' : 'bg-transparent'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+    <nav className={`fixed w-full top-0 z-50 transition-all duration-500 ease-out ${scrolled ? 'py-4' : 'py-6'}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-center">
+        <div className={`flex items-center justify-between w-full max-w-5xl rounded-full transition-all duration-500 ${scrolled ? 'bg-black/40 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20 px-6 py-3' : 'bg-transparent px-2 py-2'}`}>
 
           {/* Logo */}
-          <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('#home'); }} className="flex items-center gap-3 group">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <span className="text-green-50 text-lg">🐆</span>
+          <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('#home'); }} className="flex items-center gap-3 group shrink-0">
+            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-[0_0_15px_rgba(52,211,153,0.5)] group-hover:scale-105 transition-transform duration-300">
+              <span className="text-white text-xl leading-none">🐆</span>
             </div>
-            <div>
-              <span className="font-bold text-xl text-green-900" style={{ fontFamily: 'Playfair Display, serif' }}>Yala Safari</span>
-              <span className="block text-xs text-green-900 tracking-widest uppercase leading-none">Jeep Service · Sri Lanka</span>
+            <div className={`transition-all duration-300 ${scrolled ? 'opacity-100' : 'opacity-100'}`}>
+              <span className="font-bold text-xl text-white tracking-wide" style={{ fontFamily: 'Playfair Display, serif' }}>Yala Safari</span>
             </div>
           </a>
 
           {/* Desktop Nav */}
-          <div className="hidden md:flex items-center gap-1">
+          <div className="hidden md:flex items-center gap-1 bg-white/5 rounded-full px-2 py-1 border border-white/5 backdrop-blur-md">
             {navLinks.map((link) => {
               const isActive = activeSection === link.href.replace('#', '');
               return (
                 <a key={link.href} href={link.href}
                   onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
-                  className={`relative px-4 py-2 text-sm font-medium tracking-wide transition-all duration-300 rounded-lg group ${isActive ? 'text-green-900' : 'text-green-900 hover:text-green-900'}`}>
+                  className={`relative px-5 py-2 text-sm font-medium tracking-wide transition-all duration-300 rounded-full group ${isActive ? 'text-white' : 'text-neutral-300 hover:text-white'}`}>
+                  {isActive && <span className="absolute inset-0 bg-white/10 rounded-full shadow-[inset_0_1px_1px_rgba(255,255,255,0.1)] -z-10" />}
                   {link.label}
-                  <span className={`absolute bottom-1 left-4 right-4 h-0.5 bg-gradient-to-r from-green-400 to-green-500 rounded-full transition-all duration-300 ${isActive ? 'opacity-100 scale-x-100' : 'opacity-0 scale-x-0 group-hover:opacity-100 group-hover:scale-x-100'}`} />
                 </a>
               );
             })}
           </div>
 
           {/* CTA */}
-          <div className="hidden md:flex">
-            <a href="#booking" onClick={(e) => { e.preventDefault(); handleNavClick('#booking'); }}
-              className="px-5 py-2.5 bg-gradient-to-r from-green-500 to-green-600 text-green-50 font-semibold text-sm rounded-full hover:shadow-lg hover:shadow-green-500/30 hover:scale-105 transition-all duration-300">
-              Book a Jeep
+          <div className="hidden md:flex shrink-0">
+            <a href="#contact" onClick={(e) => { e.preventDefault(); handleNavClick('#contact'); }}
+              className="px-6 py-2.5 bg-white text-black font-semibold text-sm rounded-full hover:bg-emerald-50 hover:scale-105 hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] transition-all duration-300">
+              Contact Us
             </a>
           </div>
 
           {/* Hamburger */}
-          <button id="mobile-menu-btn" onClick={() => setMobileOpen(!mobileOpen)}
-            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5" aria-label="Toggle menu">
-            <span className={`block h-0.5 bg-green-400 transition-all duration-300 ${mobileOpen ? 'w-6 rotate-45 translate-y-2' : 'w-6'}`} />
-            <span className={`block h-0.5 bg-green-400 transition-all duration-300 ${mobileOpen ? 'opacity-0 w-0' : 'w-4'}`} />
-            <span className={`block h-0.5 bg-green-400 transition-all duration-300 ${mobileOpen ? 'w-6 -rotate-45 -translate-y-2' : 'w-6'}`} />
+          <button onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden w-10 h-10 flex flex-col items-center justify-center gap-1.5 z-50 bg-white/10 rounded-full border border-white/10 backdrop-blur-md" aria-label="Toggle menu">
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${mobileOpen ? 'w-5 rotate-45 translate-y-2' : 'w-5'}`} />
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${mobileOpen ? 'opacity-0 w-0' : 'w-4'}`} />
+            <span className={`block h-0.5 bg-white transition-all duration-300 ${mobileOpen ? 'w-5 -rotate-45 -translate-y-2' : 'w-5'}`} />
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {mobileOpen && (
-        <div className="md:hidden mobile-menu-open bg-green-50/98 backdrop-blur-xl border-t border-green-700/20 px-4 pb-6 pt-2">
+      {/* Mobile Menu Overlay */}
+      <div className={`md:hidden fixed inset-0 bg-black/95 backdrop-blur-2xl transition-all duration-500 flex flex-col items-center justify-center -z-10 ${mobileOpen ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+        <div className="flex flex-col items-center gap-8 w-full px-6">
           {navLinks.map((link) => (
             <a key={link.href} href={link.href}
               onClick={(e) => { e.preventDefault(); handleNavClick(link.href); }}
-              className="flex items-center gap-3 py-3.5 text-green-900 hover:text-green-900 transition-colors duration-200 border-b border-white/5 text-sm font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500" />{link.label}
+              className="text-2xl font-light text-neutral-300 hover:text-white transition-colors duration-300 tracking-wider">
+              {link.label}
             </a>
           ))}
-          <a href="#booking" onClick={(e) => { e.preventDefault(); handleNavClick('#booking'); }}
-            className="mt-4 block w-full text-center py-3 bg-gradient-to-r from-green-500 to-green-600 text-green-50 font-semibold rounded-full text-sm">
-            Book a Jeep Safari
+          <a href="#contact" onClick={(e) => { e.preventDefault(); handleNavClick('#contact'); }}
+            className="mt-8 px-8 py-4 w-full max-w-xs text-center bg-white text-black font-semibold rounded-full text-lg shadow-[0_0_30px_rgba(255,255,255,0.2)]">
+            Contact Us
           </a>
         </div>
-      )}
+      </div>
     </nav>
   );
 }
