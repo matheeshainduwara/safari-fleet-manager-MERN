@@ -72,47 +72,54 @@ export default function Booking() {
   const selectedPkg = jeepPackages.find(p => p.id === selected);
 
   return (
-    <section id="booking" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-green-200 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-80 h-80 bg-green-500/5 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-80 h-80 bg-green-600/5 rounded-full blur-3xl pointer-events-none" />
+    <section id="booking" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 bg-[#0a0f0d] relative overflow-hidden font-sans text-white">
+      {/* Dynamic Background Effects */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
+      <div className="absolute bottom-0 right-0 w-[600px] h-[600px] bg-green-900/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
+      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
 
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
-        <div className="text-center mb-14 reveal">
-          <span className="text-green-900 text-sm font-semibold tracking-widest uppercase">Reserve Your Jeep</span>
-          <h2 className="text-4xl sm:text-5xl font-black text-green-900 mt-3 mb-4">Book a Yala Jeep Safari</h2>
-          <div className="section-divider mb-6" />
-          <p className="text-green-900 max-w-xl mx-auto text-base">
+        <div className="text-center mb-16 reveal">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
+            <span className="text-[10px] md:text-xs font-medium tracking-widest text-emerald-400 uppercase">Reserve Your Jeep</span>
+          </div>
+          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mt-2 mb-6 tracking-tight">Book a Yala Jeep Safari</h2>
+          <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full mx-auto mb-8" />
+          <p className="text-neutral-400 max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0">
             Select a package and submit your details. We'll confirm your Yala safari booking within a few hours via WhatsApp or email.
           </p>
         </div>
 
         {/* Package Cards */}
-        <div className="grid sm:grid-cols-3 gap-4 mb-12 reveal">
+        <div className="grid lg:grid-cols-3 gap-6 mb-16 reveal">
           {jeepPackages.map((pkg) => (
             <button key={pkg.id} id={`pkg-${pkg.id}`}
               onClick={() => { setSelected(pkg.id); setForm(f => ({ ...f, package: pkg.id })); }}
-              className={`jeep-card text-left glass-card rounded-2xl p-5 border-2 transition-all duration-300 ${selected === pkg.id ? 'border-green-400/60 bg-green-400/5' : 'border-transparent hover:border-green-700/30'}`}>
-              <div className="flex items-start justify-between mb-3">
-                <span className="text-3xl">{pkg.icon}</span>
+              className={`text-left rounded-3xl p-6 sm:p-8 transition-all duration-500 border backdrop-blur-md ${selected === pkg.id ? 'bg-emerald-900/20 border-emerald-500/50 shadow-[0_0_30px_rgba(16,185,129,0.15)] transform scale-[1.02]' : 'bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20'}`}>
+              <div className="flex items-start justify-between mb-5">
+                <div className="p-3 rounded-2xl bg-white/5 border border-white/10">
+                  {pkg.icon}
+                </div>
                 {pkg.badge && (
-                  <span className={`text-xs font-bold text-green-900 px-2.5 py-1 rounded-full bg-gradient-to-r ${pkg.badgeColor}`}>{pkg.badge}</span>
+                  <span className={`text-[10px] font-bold text-white px-3 py-1.5 rounded-full bg-gradient-to-r ${pkg.badgeColor} shadow-lg tracking-wider uppercase`}>{pkg.badge}</span>
                 )}
               </div>
-              <h3 className="text-green-900 font-bold text-lg mb-1">{pkg.name}</h3>
-              <p className="text-green-900 text-xs mb-3">{pkg.duration}</p>
-              <div className="text-xl font-black stat-number">{pkg.price} <span className="text-green-900 text-xs font-normal">/ jeep</span></div>
-              <p className="text-green-900 text-xs mt-2 leading-relaxed">{pkg.description}</p>
-              <ul className="mt-4 space-y-1.5">
+              <h3 className="text-white font-bold text-xl mb-1 tracking-tight">{pkg.name}</h3>
+              <p className="text-emerald-400 text-xs font-medium mb-4 uppercase tracking-wider">{pkg.duration}</p>
+              <div className="text-3xl font-black text-white mb-4 tracking-tight">{pkg.price} <span className="text-neutral-400 text-sm font-normal">/ jeep</span></div>
+              <p className="text-neutral-400 text-sm mb-6 leading-relaxed font-light">{pkg.description}</p>
+              <ul className="space-y-3">
                 {pkg.features.map(f => (
-                  <li key={f} className="flex items-center gap-2 text-xs text-green-900">
-                    <span className="text-green-400 font-bold">✓</span> {f}
+                  <li key={f} className="flex items-start gap-3 text-sm text-neutral-300 font-light">
+                    <svg className="w-5 h-5 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    {f}
                   </li>
                 ))}
               </ul>
               {selected === pkg.id && (
-                <div className="mt-4 pt-3 border-t border-green-700/30 text-green-400 text-xs font-semibold flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" /> Selected
+                <div className="mt-6 pt-4 border-t border-emerald-500/20 text-emerald-400 text-sm font-semibold flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" /> Package Selected
                 </div>
               )}
             </button>
@@ -120,88 +127,97 @@ export default function Booking() {
         </div>
 
         {/* Form */}
-        <div className="reveal glass-card rounded-3xl p-6 sm:p-10 border border-green-700/20">
+        <div className="reveal bg-white/5 border border-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 lg:p-12 shadow-2xl">
           {submitted ? (
-            <div className="text-center py-16">
-              <div className="text-6xl mb-4">🐆</div>
-              <h3 className="text-2xl font-bold text-green-900 mb-3">Booking Request Received!</h3>
-              <p className="text-green-900 max-w-md mx-auto">
-                Thank you! Our team will WhatsApp or email you within a few hours to confirm your <strong className="text-green-400">{selectedPkg?.name}</strong> at Yala National Park.
+            <div className="text-center py-16 sm:py-24">
+              <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+              </div>
+              <h3 className="text-3xl sm:text-4xl font-bold text-white mb-4 tracking-tight">Booking Request Received!</h3>
+              <p className="text-neutral-400 max-w-lg mx-auto text-lg font-light leading-relaxed">
+                Thank you! Our team will WhatsApp or email you within a few hours to confirm your <strong className="text-emerald-400 font-medium">{selectedPkg?.name}</strong> at Yala National Park.
               </p>
-              <div className="mt-6 inline-flex items-center gap-2 text-green-400 text-sm">
-                <span className="w-2 h-2 rounded-full bg-green-400 animate-ping" /> We'll be in touch soon!
+              <div className="mt-8 inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full px-5 py-2.5 text-neutral-300 text-sm">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" /> We'll be in touch soon!
               </div>
             </div>
           ) : (
             <>
-              <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-10 gap-4">
                 <div>
-                  <h3 className="text-xl font-bold text-green-900">
-                    {selectedPkg?.icon} {selectedPkg?.name}
-                    <span className="ml-3 text-green-400">{selectedPkg?.price} / jeep</span>
+                  <h3 className="text-2xl sm:text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                    <span className="hidden sm:inline-block p-2 bg-white/5 rounded-xl border border-white/10">{selectedPkg?.icon}</span>
+                    {selectedPkg?.name}
                   </h3>
-                  <p className="text-green-900 text-sm mt-1">Fill in your details — we'll confirm via WhatsApp</p>
+                  <p className="text-neutral-400 text-sm mt-2 font-light">Fill in your details — we'll confirm via WhatsApp</p>
+                </div>
+                <div className="bg-emerald-900/30 border border-emerald-500/30 px-4 py-2 rounded-full text-emerald-400 font-bold whitespace-nowrap text-sm tracking-wide">
+                  {selectedPkg?.price} / jeep
                 </div>
               </div>
 
-              <form id="booking-form" onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-5">
+              <form id="booking-form" onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Full Name *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Full Name *</label>
                   <input id="booking-name" name="name" type="text" required value={form.name} onChange={handleChange}
                     placeholder="Your full name"
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 placeholder-white/20 text-sm transition-all duration-300" />
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Email Address *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Email Address *</label>
                   <input id="booking-email" name="email" type="email" required value={form.email} onChange={handleChange}
                     placeholder="your@email.com"
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 placeholder-white/20 text-sm transition-all duration-300" />
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">WhatsApp / Phone *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">WhatsApp / Phone *</label>
                   <input id="booking-phone" name="phone" type="tel" required value={form.phone} onChange={handleChange}
                     placeholder="+94 77 123 4567"
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 placeholder-white/20 text-sm transition-all duration-300" />
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
                 </div>
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Safari Date *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Safari Date *</label>
                   <input id="booking-date" name="date" type="date" required value={form.date} onChange={handleChange}
                     min={new Date().toISOString().split('T')[0]}
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 text-sm transition-all duration-300"
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none"
                     style={{ colorScheme: 'dark' }} />
                 </div>
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Number of Guests *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Number of Guests *</label>
                   <select id="booking-guests" name="guests" required value={form.guests} onChange={handleChange}
-                    className="safari-input w-full bg-green-100 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 text-sm transition-all duration-300">
+                    className="w-full bg-[#0a0f0d] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none">
                     {[1,2,3,4,5,6].map(n => <option key={n} value={n}>{n} {n === 1 ? 'Guest' : 'Guests'}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Safari Package *</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Safari Package *</label>
                   <select id="booking-package" name="package" value={form.package}
                     onChange={(e) => { handleChange(e); setSelected(e.target.value); }}
-                    className="safari-input w-full bg-green-100 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 text-sm transition-all duration-300">
+                    className="w-full bg-[#0a0f0d] border border-white/10 rounded-xl px-4 py-3.5 text-white text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none">
                     {jeepPackages.map(p => <option key={p.id} value={p.id}>{p.name} — {p.price}/jeep</option>)}
                   </select>
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Your Hotel / Location in Yala Area</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Your Hotel / Location in Yala Area</label>
                   <input id="booking-hotel" name="hotel" type="text" value={form.hotel} onChange={handleChange}
                     placeholder="e.g. Tissamaharama, Yala Village Hotel..."
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 placeholder-white/20 text-sm transition-all duration-300" />
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
                 </div>
                 <div className="sm:col-span-2">
-                  <label className="block text-green-900 text-xs font-semibold mb-2 tracking-wide uppercase">Special Requests</label>
+                  <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Special Requests</label>
                   <textarea id="booking-message" name="message" rows={3} value={form.message} onChange={handleChange}
                     placeholder="Dietary requirements, accessibility, anniversary, wildlife photography focus..."
-                    className="safari-input w-full bg-white/5 border border-green-900/10 rounded-xl px-4 py-3 text-green-900 placeholder-white/20 text-sm resize-none transition-all duration-300" />
+                    className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm resize-none transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
                 </div>
-                <div className="sm:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <p className="text-green-900 text-xs">🔒 No payment now. We confirm via WhatsApp first.</p>
+                <div className="sm:col-span-2 flex flex-col sm:flex-row items-center justify-between gap-6 pt-4 border-t border-white/10">
+                  <p className="text-neutral-400 text-xs flex items-center gap-2 font-light">
+                    <svg className="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+                    No payment required now. We confirm availability via WhatsApp first.
+                  </p>
                   <button id="booking-submit-btn" type="submit"
-                    className="w-full sm:w-auto px-10 py-3.5 bg-gradient-to-r from-green-500 to-green-600 text-green-50 font-bold text-sm rounded-full hover:scale-105 hover:shadow-xl hover:shadow-green-500/30 transition-all duration-300">
-                    Request My Safari →
+                    className="group relative w-full sm:w-auto px-10 py-4 bg-white text-black font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
+                    <span className="relative z-10 flex items-center justify-center gap-2">Request My Safari <span className="group-hover:translate-x-1 transition-transform">→</span></span>
+                    <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />
                   </button>
                 </div>
               </form>
