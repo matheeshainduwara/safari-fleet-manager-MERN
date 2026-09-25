@@ -42,7 +42,7 @@ export default function Navbar() {
           {/* Logo */}
           <a href="#home" onClick={(e) => { e.preventDefault(); handleNavClick('#home'); }} className="flex items-center gap-3 group shrink-0">
             <div className="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center shadow-[0_0_15px_rgba(52,211,153,0.5)] group-hover:scale-105 transition-transform duration-300">
-              <span className="text-white text-xl leading-none">🐆</span>
+              <span className="text-white text-lg font-bold" style={{ fontFamily: 'Playfair Display, serif' }}>YS</span>
             </div>
             <div className={`transition-all duration-300 ${scrolled ? 'opacity-100' : 'opacity-100'}`}>
               <span className="font-bold text-xl text-white tracking-wide" style={{ fontFamily: 'Playfair Display, serif' }}>Yala Safari</span>
