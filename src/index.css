@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-green-50: #e8f5e9;
   --color-green-100: #c8e6c9;
@@ -14,19 +16,57 @@
   --color-stone-950: #0c0a09;
 }
 
+/* ========================
+   CSS VARIABLES — LIGHT MODE
+   ======================== */
+:root {
+  --bg-primary: #f0faf0;
+  --bg-secondary: #e4f5e4;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --text-primary: #0d2b0d;
+  --text-secondary: #2d5a2d;
+  --text-muted: #4a7a4a;
+  --border: rgba(52, 211, 153, 0.2);
+  --glow: rgba(52, 211, 153, 0.12);
+  --input-bg: rgba(255,255,255,0.6);
+}
+
+/* ========================
+   CSS VARIABLES — DARK MODE
+   ======================== */
+:root.dark {
+  --bg-primary: #0a0f0d;
+  --bg-secondary: #0d1410;
+  --bg-card: rgba(255, 255, 255, 0.05);
+  --text-primary: #ffffff;
+  --text-secondary: #d1fae5;
+  --text-muted: #9ca3af;
+  --border: rgba(255, 255, 255, 0.1);
+  --glow: rgba(52, 211, 153, 0.12);
+  --input-bg: rgba(10, 15, 13, 0.5);
+}
+
 * {
   scroll-behavior: smooth;
 }
 
 body {
   font-family: 'Inter', sans-serif;
-  background-color: #e8f5e9;
-  color: #1b5e20;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
   overflow-x: hidden;
+  transition: background-color 0.4s ease, color 0.4s ease;
 }
 
 h1, h2, h3 {
   font-family: 'Playfair Display', serif;
+}
+
+/* ========================
+   THEME TRANSITION
+   ======================== */
+section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, span, a, li {
+  transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease;
 }
 
 /* Animated gradient text */
@@ -56,10 +96,10 @@ h1, h2, h3 {
 
 /* Glassmorphism card */
 .glass-card {
-  background: rgba(255, 251, 235, 0.04);
+  background: var(--bg-card);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(102, 187, 106, 0.15);
+  border: 1px solid var(--border);
 }
 
 /* Section divider */
@@ -85,7 +125,7 @@ h1, h2, h3 {
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0c0a09; }
+::-webkit-scrollbar-track { background: var(--bg-primary); }
 ::-webkit-scrollbar-thumb { background: #43a047; border-radius: 3px; }
 
 /* Gallery hover zoom */
@@ -97,29 +137,11 @@ h1, h2, h3 {
   filter: brightness(1.1);
 }
 
-/* Jeep card pulse border on hover */
-.jeep-card {
-  position: relative;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.jeep-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 20px 60px rgba(76, 175, 80, 0.25);
-}
-
 /* Input focus glow */
 .safari-input:focus {
   outline: none;
   border-color: #4caf50;
   box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.2);
-}
-
-/* Navbar transition */
-.navbar-scrolled {
-  background: rgba(232, 245, 233, 0.95);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(102, 187, 106, 0.2);
-  box-shadow: 0 4px 30px rgba(0,0,0,0.05);
 }
 
 /* Mobile menu slide */
@@ -142,6 +164,122 @@ h1, h2, h3 {
 
 /* Booking form select fix */
 select option {
-  background-color: #1c1917;
-  color: #c8e6c9;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
 }
+
+/* ========================
+   LIGHT MODE OVERRIDES
+   ======================== */
+
+/* Section backgrounds */
+:root:not(.dark) section {
+  background-color: #f0faf0 !important;
+}
+
+/* Ambient glow orbs — softer in light mode */
+:root:not(.dark) .mix-blend-screen {
+  opacity: 0.15 !important;
+}
+:root:not(.dark) .mix-blend-overlay {
+  opacity: 0.05 !important;
+}
+
+/* Glassmorphic cards → white glass */
+:root:not(.dark) [class*="bg-white/5"],
+:root:not(.dark) [class*="bg-white/10"],
+:root:not(.dark) [class*="bg-white/20"] {
+  background: rgba(255, 255, 255, 0.72) !important;
+  border-color: rgba(52, 211, 153, 0.22) !important;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.06) !important;
+}
+
+/* Dark bg overrides — sections use this inline */
+:root:not(.dark) [class*="bg-\\[\\#0a0f0d\\]"],
+:root:not(.dark) [class*="bg-\\[\\#0a0f0d\\]\\/50"],
+:root:not(.dark) [class*="bg-\\[\\#0a0f0d\\]\\/40"] {
+  background: rgba(255, 255, 255, 0.65) !important;
+  border-color: rgba(52, 211, 153, 0.2) !important;
+}
+
+/* Text colors */
+:root:not(.dark) .text-white {
+  color: #0d2b0d !important;
+}
+:root:not(.dark) [class*="text-neutral-400"],
+:root:not(.dark) [class*="text-neutral-500"],
+:root:not(.dark) [class*="text-neutral-600"] {
+  color: #4a7a4a !important;
+}
+:root:not(.dark) [class*="text-neutral-300"],
+:root:not(.dark) [class*="text-neutral-200"] {
+  color: #2d5a2d !important;
+}
+
+/* Keep buttons readable */
+:root:not(.dark) button.bg-white,
+:root:not(.dark) a.bg-white {
+  background: #1b5e20 !important;
+  color: #ffffff !important;
+}
+:root:not(.dark) button.bg-white:hover,
+:root:not(.dark) a.bg-white:hover {
+  background: #2e7d32 !important;
+}
+/* Keep emerald accent buttons normal */
+:root:not(.dark) [class*="bg-emerald"],
+:root:not(.dark) [class*="bg-gradient-to-r"][class*="emerald"] {
+  /* leave emerald gradient buttons as-is */
+}
+
+/* Hero section — keep dark overlay on background image */
+:root:not(.dark) #home {
+  background-color: #0d2b0d !important;
+}
+:root:not(.dark) #home .text-white {
+  color: #ffffff !important;
+}
+:root:not(.dark) #home [class*="text-neutral"] {
+  color: rgba(255,255,255,0.75) !important;
+}
+
+/* Gallery image cards */
+:root:not(.dark) .gallery-item .absolute {
+  background: linear-gradient(to top, #f0faf0, transparent) !important;
+}
+:root:not(.dark) .gallery-item {
+  border-color: rgba(52, 211, 153, 0.3) !important;
+}
+
+/* Footer */
+:root:not(.dark) footer {
+  background-color: #e4f5e4 !important;
+  border-top-color: rgba(52, 211, 153, 0.3) !important;
+}
+:root:not(.dark) footer [class*="text-neutral-500"] {
+  color: #4a7a4a !important;
+}
+
+/* Navbar logo in light mode stays visible */
+:root:not(.dark) nav [class*="text-emerald-400"] {
+  color: #059669 !important;
+}
+
+/* Input fields */
+:root:not(.dark) input,
+:root:not(.dark) textarea,
+:root:not(.dark) select {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(52, 211, 153, 0.3) !important;
+  color: #0d2b0d !important;
+}
+:root:not(.dark) input::placeholder,
+:root:not(.dark) textarea::placeholder {
+  color: #9ca3af !important;
+}
+
+/* Gradient accent line stays the same */
+:root:not(.dark) .from-emerald-400.via-emerald-500.to-green-600 {
+  /* keep as is */
+}
+
