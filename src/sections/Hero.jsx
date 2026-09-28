@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+﻿import { useEffect, useRef } from 'react';
 
 export default function Hero() {
   const textRef = useRef(null);
@@ -36,13 +36,12 @@ export default function Hero() {
           {/* Content */}
           <div ref={textRef} className="w-full max-w-4xl text-center z-20 flex flex-col items-center">
 
-            
             <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-[5.5rem] font-extrabold tracking-tighter text-white leading-[1.1] md:leading-[1.05] mb-6 md:mb-8">
               Discover the <br />
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-green-400 to-emerald-200">Untamed Wild</span>
             </h1>
 
-            <p className="text-base md:text-xl text-neutral-400 mb-8 md:mb-10 leading-relaxed max-w-2xl font-light mx-auto px-2 sm:px-0">
+            <p className="text-base md:text-xl text-white/70 mb-8 md:mb-10 leading-relaxed max-w-2xl font-light mx-auto px-2 sm:px-0">
               Embark on an unforgettable journey. Experience the highest density of wild leopards and majestic elephants in their natural, pristine habitat.
             </p>
 
@@ -61,13 +60,11 @@ export default function Hero() {
                 View Gallery
               </button>
             </div>
-            
 
           </div>
 
         </div>
       </div>
-
 
     </section>
   );

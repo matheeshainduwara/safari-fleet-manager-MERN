@@ -1,7 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+﻿import { useEffect, useRef, useState } from 'react';
+import { useTheme } from '../context/ThemeContext';
 
 export default function Contact() {
   const sectionRef = useRef(null);
+  const { isDark } = useTheme();
   const [submitted, setSubmitted] = useState(false);
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
 
@@ -31,14 +33,21 @@ export default function Contact() {
   };
 
   const contactInfo = [
-    { icon: '📍', title: 'Our Location', lines: ['Yala Road, Thissamaharama', 'Southern Province, Sri Lanka 82600'] },
-    { icon: '📞', title: 'Call / WhatsApp', lines: ['+94 77 234 5678', '+94 71 987 6543'] },
-    { icon: '✉️', title: 'Email Us', lines: ['info@yalasafarijeep.lk', 'booking@yalasafarijeep.lk'] },
-    { icon: '⏰', title: 'Operating Hours', lines: ['Daily: 5:00 AM – 7:00 PM', 'Park Season: Jan – Oct (Best)'] },
+    { icon: 'ðŸ“', title: 'Our Location', lines: ['Yala Road, Thissamaharama', 'Southern Province, Sri Lanka 82600'] },
+    { icon: 'ðŸ“ž', title: 'Call / WhatsApp', lines: ['+94 77 234 5678', '+94 71 987 6543'] },
+    { icon: 'âœ‰ï¸', title: 'Email Us', lines: ['info@yalasafarijeep.lk', 'booking@yalasafarijeep.lk'] },
+    { icon: 'â°', title: 'Operating Hours', lines: ['Daily: 5:00 AM â€“ 7:00 PM', 'Park Season: Jan â€“ Oct (Best)'] },
   ];
 
+  const inputCls = `w-full rounded-xl px-4 py-3.5 text-sm transition-all duration-300 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 ${
+    isDark
+      ? 'bg-[#0a0f0d]/50 border border-white/10 text-white placeholder-neutral-600'
+      : 'bg-white border border-emerald-300/40 text-[#0d2b0d] placeholder-neutral-400'
+  }`;
+  const labelCls = `block text-xs font-semibold mb-2 tracking-widest uppercase ${isDark ? 'text-neutral-300' : 'text-[#4a7a4a]'}`;
+
   return (
-    <section id="contact" ref={sectionRef} className="py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden bg-[#0a0f0d] font-sans text-white">
+    <section id="contact" ref={sectionRef} className={`py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans transition-colors duration-300 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf0] text-[#0d2b0d]'}`}>
       {/* Dynamic Background Effects */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
       <div className="absolute top-20 left-10 w-[400px] h-[400px] bg-green-900/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
@@ -47,13 +56,13 @@ export default function Contact() {
       <div className="max-w-7xl mx-auto relative z-10">
         {/* Header */}
         <div className="text-center mb-16 reveal">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md mb-6">
-            <span className="text-[10px] md:text-xs font-medium tracking-widest text-emerald-400 uppercase">Get In Touch</span>
+          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md mb-6 ${isDark ? 'bg-white/5 border border-white/10' : 'bg-emerald-600/10 border border-emerald-400/25'}`}>
+            <span className="text-[10px] md:text-xs font-medium tracking-widest text-emerald-500 uppercase">Get In Touch</span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white mt-2 mb-6 tracking-tight">Contact Us</h2>
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black mt-2 mb-6 tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Contact Us</h2>
           <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full mx-auto mb-8" />
-          <p className="text-neutral-400 max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0">
-            Based in Thissamaharama, just minutes from Yala National Park's main entrance. Reach us any time — we're always happy to help plan your safari.
+          <p className={`max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
+            Based in Thissamaharama, just minutes from Yala National Park's main entrance. Reach us any time â€” we're always happy to help plan your safari.
           </p>
         </div>
 
@@ -61,20 +70,20 @@ export default function Contact() {
           {/* Info Cards */}
           <div className="lg:col-span-2 space-y-4 reveal">
             {contactInfo.map((item) => (
-              <div key={item.title} className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6 flex items-start gap-5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group">
-                <div className="w-12 h-12 rounded-xl bg-[#0a0f0d] border border-white/10 flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-lg shadow-black/50">
+              <div key={item.title} className={`backdrop-blur-md rounded-2xl p-6 flex items-start gap-5 transition-all duration-300 group ${isDark ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20' : 'bg-white/85 border border-emerald-300/30 hover:bg-white hover:border-emerald-400/50 shadow-sm'}`}>
+                <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-500 ${isDark ? 'bg-[#0a0f0d] border border-white/10 shadow-lg shadow-black/50' : 'bg-emerald-50 border border-emerald-200/60'}`}>
                   {item.icon}
                 </div>
                 <div>
-                  <h4 className="text-white font-bold text-base mb-2 tracking-wide">{item.title}</h4>
-                  {item.lines.map((line) => <p key={line} className="text-neutral-400 text-sm leading-relaxed font-light">{line}</p>)}
+                  <h4 className={`font-bold text-base mb-2 tracking-wide ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>{item.title}</h4>
+                  {item.lines.map((line) => <p key={line} className={`text-sm leading-relaxed font-light ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>{line}</p>)}
                 </div>
               </div>
             ))}
 
             {/* Social */}
-            <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-6 flex flex-col items-center sm:items-start">
-              <h4 className="text-white font-bold text-sm mb-4 tracking-widest uppercase">Follow Our Safaris</h4>
+            <div className={`backdrop-blur-md rounded-2xl p-6 flex flex-col items-center sm:items-start ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white/85 border border-emerald-300/30 shadow-sm'}`}>
+              <h4 className={`font-bold text-sm mb-4 tracking-widest uppercase ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Follow Our Safaris</h4>
               <div className="flex gap-4">
                 {[
                   { label: 'Facebook', icon: (
@@ -88,7 +97,7 @@ export default function Contact() {
                   ) },
                 ].map((s) => (
                   <button key={s.label} id={`social-${s.label.toLowerCase()}`} aria-label={s.label}
-                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 hover:bg-emerald-500 hover:border-emerald-500 flex items-center justify-center text-white transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-emerald-500/50">
+                    className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 transform hover:scale-110 shadow-lg hover:shadow-emerald-500/50 hover:bg-emerald-500 hover:border-emerald-500 hover:text-white ${isDark ? 'bg-white/5 border border-white/10 text-white' : 'bg-white border border-emerald-200 text-emerald-600'}`}>
                     {s.icon}
                   </button>
                 ))}
@@ -98,53 +107,50 @@ export default function Contact() {
 
           {/* Form */}
           <div className="lg:col-span-3 reveal">
-            <div className="bg-white/5 border border-white/10 backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 shadow-2xl">
+            <div className={`backdrop-blur-xl rounded-[2.5rem] p-6 sm:p-10 shadow-2xl ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white/90 border border-emerald-300/30'}`}>
               {submitted ? (
                 <div className="text-center py-12 sm:py-20">
                   <div className="w-20 h-20 bg-emerald-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg className="w-10 h-10 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                    <svg className="w-10 h-10 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
                   </div>
-                  <h3 className="text-3xl font-bold text-white mb-4 tracking-tight">Message Sent!</h3>
-                  <p className="text-neutral-400 text-lg font-light leading-relaxed max-w-md mx-auto">
+                  <h3 className={`text-3xl font-bold mb-4 tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Message Sent!</h3>
+                  <p className={`text-lg font-light leading-relaxed max-w-md mx-auto ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
                     Our team in Thissamaharama will reply to you very soon. Get ready for an unforgettable Yala experience!
                   </p>
                 </div>
               ) : (
                 <>
-                  <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">Send a Message</h3>
-                  <p className="text-neutral-400 text-sm font-light mb-8">Have a question? Drop us a line below.</p>
+                  <h3 className={`text-2xl font-bold mb-2 tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Send a Message</h3>
+                  <p className={`text-sm font-light mb-8 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>Have a question? Drop us a line below.</p>
                   
                   <form id="contact-form" onSubmit={handleSubmit} className="space-y-6">
                     <div className="grid sm:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Your Name *</label>
+                        <label className={labelCls}>Your Name *</label>
                         <input id="contact-name" name="name" type="text" required value={form.name} onChange={handleChange}
-                          placeholder="Your name"
-                          className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
+                          placeholder="Your name" className={inputCls} />
                       </div>
                       <div>
-                        <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Email *</label>
+                        <label className={labelCls}>Email *</label>
                         <input id="contact-email" name="email" type="email" required value={form.email} onChange={handleChange}
-                          placeholder="your@email.com"
-                          className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
+                          placeholder="your@email.com" className={inputCls} />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Subject *</label>
+                      <label className={labelCls}>Subject *</label>
                       <input id="contact-subject" name="subject" type="text" required value={form.subject} onChange={handleChange}
-                        placeholder="Safari inquiry, booking help, group rates..."
-                        className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
+                        placeholder="Safari inquiry, booking help, group rates..." className={inputCls} />
                     </div>
                     <div>
-                      <label className="block text-neutral-300 text-xs font-semibold mb-2 tracking-widest uppercase">Message *</label>
+                      <label className={labelCls}>Message *</label>
                       <textarea id="contact-message" name="message" rows={5} required value={form.message} onChange={handleChange}
                         placeholder="Tell us about your planned visit to Yala..."
-                        className="w-full bg-[#0a0f0d]/50 border border-white/10 rounded-xl px-4 py-3.5 text-white placeholder-neutral-600 text-sm resize-none transition-all duration-300 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 outline-none" />
+                        className={`${inputCls} resize-none`} />
                     </div>
                     <button id="contact-submit-btn" type="submit"
-                      className="group relative w-full sm:w-auto px-10 py-4 bg-white text-black font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]">
-                      <span className="relative z-10 flex items-center justify-center gap-2">Send Message <span className="group-hover:translate-x-1 transition-transform">→</span></span>
-                      <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />
+                      className={`group relative w-full sm:w-auto px-10 py-4 font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 ${isDark ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]' : 'bg-[#166534] text-white hover:bg-[#15803d] hover:shadow-[0_0_30px_rgba(22,101,52,0.3)]'}`}>
+                      <span className="relative z-10 flex items-center justify-center gap-2">Send Message <span className="group-hover:translate-x-1 transition-transform">â†’</span></span>
+                      {isDark && <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />}
                     </button>
                   </form>
                 </>
@@ -155,21 +161,21 @@ export default function Contact() {
 
         {/* Map */}
         <div className="mt-16 reveal px-4 sm:px-0">
-          <div className="bg-white/5 border border-white/10 backdrop-blur-md rounded-[2.5rem] overflow-hidden p-8 sm:p-12 relative flex flex-col items-center justify-center text-center shadow-2xl">
+          <div className={`backdrop-blur-md rounded-[2.5rem] overflow-hidden p-8 sm:p-12 relative flex flex-col items-center justify-center text-center shadow-2xl ${isDark ? 'bg-white/5 border border-white/10' : 'bg-white/85 border border-emerald-300/30'}`}>
             <div className="absolute inset-0 bg-[url('/images/hero_bg.jpg')] bg-cover bg-center opacity-10 mix-blend-luminosity" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0a0f0d] via-[#0a0f0d]/50 to-[#0a0f0d]/50" />
+            <div className={`absolute inset-0 bg-gradient-to-t via-transparent ${isDark ? 'from-[#0a0f0d] to-[#0a0f0d]/50' : 'from-[#f0faf0]/80 to-[#f0faf0]/50'}`} />
             
             <div className="relative z-10">
-              <div className="w-16 h-16 bg-white/10 border border-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl">
-                <svg className="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+              <div className={`w-16 h-16 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-6 shadow-xl ${isDark ? 'bg-white/10 border border-white/20' : 'bg-white/90 border border-emerald-200'}`}>
+                <svg className="w-8 h-8 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               </div>
-              <h4 className="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-2">Yala National Park</h4>
-              <p className="text-neutral-400 text-sm font-light mb-8">Thissamaharama · Southern Province · Sri Lanka</p>
+              <h4 className={`text-2xl sm:text-3xl font-bold tracking-tight mb-2 ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Yala National Park</h4>
+              <p className={`text-sm font-light mb-8 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>Thissamaharama Â· Southern Province Â· Sri Lanka</p>
               <a id="map-directions-btn"
                 href="https://maps.google.com/?q=Yala+National+Park+Sri+Lanka"
                 target="_blank" rel="noreferrer"
-                className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 border border-white/20 backdrop-blur-md text-white font-semibold text-sm rounded-full hover:bg-emerald-500 hover:border-emerald-500 transition-all duration-300 group">
-                Get Directions <span className="group-hover:translate-x-1 transition-transform">→</span>
+                className={`inline-flex items-center justify-center gap-2 px-8 py-3.5 backdrop-blur-md font-semibold text-sm rounded-full hover:bg-emerald-500 hover:border-emerald-500 hover:text-white transition-all duration-300 group ${isDark ? 'bg-white/10 border border-white/20 text-white' : 'bg-white border border-emerald-200 text-[#166534]'}`}>
+                Get Directions <span className="group-hover:translate-x-1 transition-transform">â†’</span>
               </a>
             </div>
           </div>
@@ -178,3 +184,8 @@ export default function Contact() {
     </section>
   );
 }
+
+  const sectionRef = useRef(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+
