@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
 const images = [
@@ -36,6 +36,14 @@ export default function Gallery() {
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, []);
+
+  // Re-apply visible class after theme change re-renders the DOM
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 60);
+    });
+  }, [isDark]);
 
   const displayImages = [
     images[0], images[1], images[2], images[3],

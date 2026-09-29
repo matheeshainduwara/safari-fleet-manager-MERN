@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
 const jeepPackages = [
@@ -60,6 +60,14 @@ export default function Booking() {
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
+
+  // Re-apply visible class after theme change re-renders the DOM
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 60);
+    });
+  }, [isDark]);
 
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 

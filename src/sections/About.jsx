@@ -29,6 +29,14 @@ export default function About() {
     return () => observer.disconnect();
   }, []);
 
+  // Re-apply visible class after theme change re-renders the DOM
+  useEffect(() => {
+    if (!sectionRef.current) return;
+    sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
+      setTimeout(() => el.classList.add('visible'), i * 60);
+    });
+  }, [isDark]);
+
   return (
     <section id="about" ref={sectionRef} className={`py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans transition-colors duration-300 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf0] text-[#0d2b0d]'}`}>
       {/* Dynamic Background Effects matching Hero */}
