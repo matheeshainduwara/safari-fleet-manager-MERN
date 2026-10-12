@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const slides = [
   { src: '/images/gallery_1.jpg', label: 'Sri Lankan Leopard',      sub: 'Yala Block 1' },
@@ -143,11 +144,8 @@ export default function Hero() {
                 onClick={() => document.querySelector('#gallery')?.scrollIntoView({ behavior: 'smooth' })}
                 className={`group flex-1 sm:flex-initial px-4 py-3 sm:px-8 sm:py-3.5 font-medium text-sm sm:text-base rounded-full transition-all duration-300 flex items-center justify-center gap-2 sm:gap-2.5 backdrop-blur-md ${isDark ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10' : 'bg-white/70 border border-emerald-300/60 text-emerald-800 hover:bg-white'}`}
               >
-                <div className={`w-5 h-5 sm:w-6 sm:h-6 rounded-full flex items-center justify-center shrink-0 ${isDark ? 'bg-white/10' : 'bg-emerald-100'}`}>
-                  <svg className="w-3.5 h-3.5 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${isDark ? 'bg-white/10 text-emerald-400' : 'bg-emerald-100 text-emerald-700'}`}>
+                  <FiImage className="w-3.5 h-3.5" />
                 </div>
                 View Gallery
               </button>
@@ -246,9 +244,7 @@ export default function Hero() {
                   isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
                 }`}
               >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                </svg>
+                <FiChevronLeft className="w-4 h-4" />
               </button>
 
               <div className="flex gap-1.5">
@@ -275,9 +271,7 @@ export default function Hero() {
                   isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
                 }`}
               >
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <FiChevronRight className="w-4 h-4" />
               </button>
             </div>
           </div>

@@ -1,48 +1,72 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import { useAuth } from '../context/AuthContext';
+import { FiLock, FiCheck, FiUserCheck, FiShield } from 'react-icons/fi';
 
 const jeepPackages = [
   {
     id: 'morning',
     name: 'Morning Game Drive',
-    duration: '3â€“4 Hours',
+    duration: '3–4 Hours',
     price: 'LKR 6,500',
-    icon: 'ðŸŒ…',
+    icon: '🌅',
     badge: 'Most Popular',
     badgeColor: 'from-green-500 to-green-500',
     description: 'The best time to spot leopards and elephants as they head to waterholes at dawn in Yala Block 1.',
-    features: ['5:30 AM â€“ 9:30 AM', 'Max 6 passengers', 'Licensed tracker & driver', 'Bottled water included', 'Photo stop at key spots'],
+    features: ['5:30 AM – 9:30 AM', 'Max 6 passengers', 'Licensed tracker & driver', 'Bottled water included', 'Photo stop at key spots'],
   },
   {
     id: 'fullday',
     name: 'Full Day Safari',
-    duration: '8â€“9 Hours',
+    duration: '8–9 Hours',
     price: 'LKR 14,500',
-    icon: 'â˜€ï¸',
+    icon: '☀️',
     badge: 'Best Value',
     badgeColor: 'from-green-500 to-emerald-600',
-    description: 'Full park access from dawn to dusk â€” maximum wildlife sightings including leopard, sloth bear, and crocodile.',
-    features: ['5:30 AM â€“ 2:30 PM', 'Max 6 passengers', 'Senior tracker', 'Lunch & refreshments', 'Block 1 + Block 5 access', 'Unlimited photo stops'],
+    description: 'Full park access from dawn to dusk — maximum wildlife sightings including leopard, sloth bear, and crocodile.',
+    features: ['5:30 AM – 2:30 PM', 'Max 6 passengers', 'Senior tracker', 'Lunch & refreshments', 'Block 1 + Block 5 access', 'Unlimited photo stops'],
   },
   {
     id: 'evening',
     name: 'Evening Sunset Drive',
-    duration: '3â€“4 Hours',
+    duration: '3–4 Hours',
     price: 'LKR 7,000',
-    icon: 'ðŸŒ™',
+    icon: '🌙',
     badge: 'Scenic Choice',
     badgeColor: 'from-purple-500 to-indigo-600',
-    description: "Golden hour through Yala's lagoons â€” perfect for elephant herds, birds, and stunning Menik River sunsets.",
-    features: ['2:30 PM â€“ 6:30 PM', 'Max 6 passengers', 'Sunset lagoon route', 'Bottled water included', 'Ideal for photography'],
+    description: "Golden hour through Yala's lagoons — perfect for elephant herds, birds, and stunning Menik River sunsets.",
+    features: ['2:30 PM – 6:30 PM', 'Max 6 passengers', 'Sunset lagoon route', 'Bottled water included', 'Ideal for photography'],
   },
 ];
 
 export default function Booking() {
   const sectionRef = useRef(null);
   const { isDark } = useTheme();
+  const { user, isAuthenticated, openAuthModal } = useAuth();
   const [selected, setSelected] = useState('fullday');
   const [submitted, setSubmitted] = useState(false);
-  const [form, setForm] = useState({ name: '', email: '', phone: '', date: '', guests: '2', package: 'fullday', hotel: '', message: '' });
+  const [form, setForm] = useState({
+    name: user?.name || '',
+    email: user?.email || '',
+    phone: user?.phone || '',
+    date: '',
+    guests: '2',
+    package: 'fullday',
+    hotel: '',
+    message: '',
+  });
+
+  // Keep form synced when user logs in or out
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        name: prev.name || user.name || '',
+        email: prev.email || user.email || '',
+        phone: prev.phone || user.phone || '',
+      }));
+    }
+  }, [user]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -73,9 +97,22 @@ export default function Booking() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    if (!isAuthenticated) {
+      openAuthModal('register');
+      return;
+    }
     setSubmitted(true);
     setTimeout(() => setSubmitted(false), 5000);
-    setForm({ name: '', email: '', phone: '', date: '', guests: '2', package: 'fullday', hotel: '', message: '' });
+    setForm({
+      name: user?.name || '',
+      email: user?.email || '',
+      phone: user?.phone || '',
+      date: '',
+      guests: '2',
+      package: 'fullday',
+      hotel: '',
+      message: '',
+    });
     setSelected('fullday');
   };
 
@@ -174,12 +211,71 @@ export default function Booking() {
                     <span className={`hidden sm:inline-block p-2 rounded-xl ${isDark ? 'bg-white/5 border border-white/10' : 'bg-emerald-100/60 border border-emerald-200/50'}`}>{selectedPkg?.icon}</span>
                     {selectedPkg?.name}
                   </h3>
-                  <p className={`text-sm mt-2 font-light ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>Fill in your details â€” we'll confirm via WhatsApp</p>
+                  <p className={`text-sm mt-2 font-light ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
+                    {isAuthenticated
+                      ? `Logged in as ${user?.name} — confirm your booking below`
+                      : 'Please log in or register to reserve your safari jeep'}
+                  </p>
                 </div>
-                <div className={`px-4 py-2 rounded-full font-bold whitespace-nowrap text-sm tracking-wide ${isDark ? 'bg-emerald-900/30 border border-emerald-500/30 text-emerald-400' : 'bg-emerald-100 border border-emerald-300 text-emerald-700'}`}>
-                  {selectedPkg?.price} / jeep
+                <div className="flex items-center gap-3 flex-wrap">
+                  {isAuthenticated ? (
+                    <div className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 border ${
+                      isDark ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-emerald-50 border-emerald-300 text-emerald-800'
+                    }`}>
+                      <FiUserCheck className="w-3.5 h-3.5 text-emerald-500" />
+                      <span>Verified Member</span>
+                    </div>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => openAuthModal('login')}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 transition-all border hover:scale-105 ${
+                        isDark ? 'bg-amber-500/10 border-amber-500/30 text-amber-300 hover:bg-amber-500/20' : 'bg-amber-50 border-amber-300 text-amber-800 hover:bg-amber-100'
+                      }`}
+                    >
+                      <FiLock className="w-3.5 h-3.5" />
+                      <span>Login Required to Book</span>
+                    </button>
+                  )}
+                  <div className={`px-4 py-2 rounded-full font-bold whitespace-nowrap text-sm tracking-wide ${isDark ? 'bg-emerald-900/30 border border-emerald-500/30 text-emerald-400' : 'bg-emerald-100 border border-emerald-300 text-emerald-700'}`}>
+                    {selectedPkg?.price} / jeep
+                  </div>
                 </div>
               </div>
+
+              {!isAuthenticated && (
+                <div className={`mb-8 p-4 rounded-2xl border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 backdrop-blur-md ${
+                  isDark ? 'bg-amber-500/5 border-amber-500/20 text-neutral-300' : 'bg-amber-50/70 border-amber-200 text-amber-950'
+                }`}>
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/15 flex items-center justify-center text-amber-400 shrink-0">
+                      <FiShield className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold">Registered Guests Only</p>
+                      <p className="text-xs opacity-80 font-light">To guarantee jeep availability & driver coordination, please sign in or register before booking.</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 w-full sm:w-auto">
+                    <button
+                      type="button"
+                      onClick={() => openAuthModal('login')}
+                      className="px-4 py-2 rounded-xl text-xs font-semibold bg-emerald-600 text-white hover:bg-emerald-700 transition-all shrink-0"
+                    >
+                      Login
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openAuthModal('register')}
+                      className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all shrink-0 ${
+                        isDark ? 'border-white/20 text-white hover:bg-white/10' : 'border-emerald-300 text-emerald-900 hover:bg-emerald-100'
+                      }`}
+                    >
+                      Register
+                    </button>
+                  </div>
+                </div>
+              )}
 
               <form id="booking-form" onSubmit={handleSubmit} className="grid sm:grid-cols-2 gap-6">
                 <div>
@@ -216,7 +312,7 @@ export default function Booking() {
                   <select id="booking-package" name="package" value={form.package}
                     onChange={(e) => { handleChange(e); setSelected(e.target.value); }}
                     className={`w-full rounded-xl px-4 py-3.5 text-sm transition-all duration-300 outline-none focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400 ${isDark ? 'bg-[#0a0f0d] border border-white/10 text-white' : 'bg-white border border-emerald-300/40 text-[#0d2b0d]'}`}>
-                    {jeepPackages.map(p => <option key={p.id} value={p.id}>{p.name} â€” {p.price}/jeep</option>)}
+                    {jeepPackages.map(p => <option key={p.id} value={p.id}>{p.name} — {p.price}/jeep</option>)}
                   </select>
                 </div>
                 <div className="sm:col-span-2">
@@ -236,9 +332,29 @@ export default function Booking() {
                     No payment required now. We confirm availability via WhatsApp first.
                   </p>
                   <button id="booking-submit-btn" type="submit"
-                    className={`group relative w-full sm:w-auto px-10 py-4 font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 ${isDark ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]' : 'bg-[#166534] text-white hover:bg-[#15803d] hover:shadow-[0_0_30px_rgba(22,101,52,0.3)]'}`}>
-                    <span className="relative z-10 flex items-center justify-center gap-2">Request My Safari <span className="group-hover:translate-x-1 transition-transform">â†’</span></span>
-                    {isDark && <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />}
+                    className={`group relative w-full sm:w-auto px-10 py-4 font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 flex items-center justify-center gap-2 ${
+                      !isAuthenticated
+                        ? isDark
+                          ? 'bg-amber-400 text-black hover:bg-amber-300 hover:shadow-[0_0_30px_rgba(251,191,36,0.3)]'
+                          : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_30px_rgba(22,101,52,0.3)]'
+                        : isDark
+                          ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]'
+                          : 'bg-[#166534] text-white hover:bg-[#15803d] hover:shadow-[0_0_30px_rgba(22,101,52,0.3)]'
+                    }`}>
+                    <span className="relative z-10 flex items-center justify-center gap-2">
+                      {!isAuthenticated ? (
+                        <>
+                          <FiLock className="w-4 h-4" />
+                          <span>Login to Reserve Jeep</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Request My Safari</span>
+                          <span className="group-hover:translate-x-1 transition-transform">→</span>
+                        </>
+                      )}
+                    </span>
+                    {isDark && isAuthenticated && <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />}
                   </button>
                 </div>
               </form>

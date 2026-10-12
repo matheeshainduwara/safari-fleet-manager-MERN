@@ -6,21 +6,26 @@ import Gallery from './sections/Gallery';
 import Booking from './sections/Booking';
 import Contact from './sections/Contact';
 import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
+import AuthModal from './components/AuthModal';
 
 export default function App() {
   return (
     <ThemeProvider>
-      <div className="min-h-screen bg-[#0a0f0d] dark:bg-[#0a0f0d]">
-        <Navbar />
-        <main>
-          <Hero />
-          <About />
-          <Gallery />
-          <Booking />
-          <Contact />
-        </main>
-        <Footer />
-      </div>
+      <AuthProvider>
+        <div className="min-h-screen bg-[#0a0f0d] dark:bg-[#0a0f0d]">
+          <Navbar />
+          <main>
+            <Hero />
+            <About />
+            <Gallery />
+            <Booking />
+            <Contact />
+          </main>
+          <Footer />
+          <AuthModal />
+        </div>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
