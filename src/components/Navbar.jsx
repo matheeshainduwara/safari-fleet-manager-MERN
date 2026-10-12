@@ -82,7 +82,7 @@ export default function Navbar() {
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               className={`relative w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95 border backdrop-blur-md focus:outline-none ${
                 isDark
-                  ? 'bg-white/5 border-white/10 text-emerald-400 hover:bg-emerald-500/15 hover:border-emerald-500/30 hover:shadow-[0_0_20px_rgba(52,211,153,0.3)]'
+                  ? 'bg-white/5 border-white/10 text-yellow-400 hover:bg-white/10 hover:border-white/20'
                   : 'bg-emerald-500/10 border-emerald-300/60 text-emerald-800 hover:bg-emerald-500/20 hover:border-emerald-400 hover:shadow-[0_0_20px_rgba(16,185,129,0.25)]'
               }`}
             >
@@ -97,7 +97,7 @@ export default function Navbar() {
                 <FiMoon
                   className={`w-4.5 h-4.5 absolute transition-all duration-500 transform ${
                     isDark
-                      ? 'rotate-0 scale-100 opacity-100 text-emerald-400'
+                      ? 'rotate-0 scale-100 opacity-100 text-yellow-400'
                       : '-rotate-90 scale-0 opacity-0'
                   }`}
                 />
@@ -166,7 +166,7 @@ export default function Navbar() {
               aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
               className={`relative w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 active:scale-90 border backdrop-blur-md focus:outline-none ${
                 isDark
-                  ? 'bg-white/5 border-white/10 text-emerald-400'
+                  ? 'bg-white/5 border-white/10 text-yellow-400'
                   : 'bg-emerald-500/10 border-emerald-300/60 text-emerald-800'
               }`}
             >
@@ -181,7 +181,7 @@ export default function Navbar() {
                 <FiMoon
                   className={`w-4 h-4 absolute transition-all duration-500 transform ${
                     isDark
-                      ? 'rotate-0 scale-100 opacity-100 text-emerald-400'
+                      ? 'rotate-0 scale-100 opacity-100 text-yellow-400'
                       : '-rotate-90 scale-0 opacity-0'
                   }`}
                 />

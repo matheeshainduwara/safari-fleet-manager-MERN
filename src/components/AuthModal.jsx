@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 import { FiX, FiMail, FiLock, FiUser, FiPhone, FiCheck, FiArrowRight } from 'react-icons/fi';
@@ -17,6 +17,17 @@ export default function AuthModal() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+
+  // Lock background window scrolling when auth modal is open
+  useEffect(() => {
+    if (authModalOpen) {
+      const originalStyle = window.getComputedStyle(document.body).overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = originalStyle;
+      };
+    }
+  }, [authModalOpen]);
 
   if (!authModalOpen) return null;
 
@@ -102,16 +113,16 @@ export default function AuthModal() {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       {/* Backdrop */}
       <div
         onClick={closeAuthModal}
-        className="absolute inset-0 bg-black/70 backdrop-blur-md transition-opacity duration-300"
+        className="absolute inset-0 bg-black/75 backdrop-blur-md transition-opacity duration-300"
       />
 
       {/* Modal Card */}
       <div
-        className={`relative w-full max-w-md rounded-3xl p-6 sm:p-8 overflow-hidden z-10 transition-all duration-300 shadow-2xl border ${
+        className={`relative w-full max-w-lg max-h-[92vh] overflow-y-auto sm:overflow-visible rounded-3xl p-4 sm:p-7 z-10 transition-all duration-300 shadow-2xl border ${
           isDark
             ? 'bg-[#0f1713] border-white/10 text-white'
             : 'bg-white border-emerald-200/80 text-[#0d2b0d]'
@@ -128,7 +139,7 @@ export default function AuthModal() {
         {/* Close Button */}
         <button
           onClick={closeAuthModal}
-          className={`absolute top-5 right-5 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
+          className={`absolute top-4 right-4 w-8 h-8 rounded-full flex items-center justify-center transition-all ${
             isDark
               ? 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
               : 'bg-black/5 text-neutral-500 hover:text-black hover:bg-black/10'
@@ -139,16 +150,16 @@ export default function AuthModal() {
         </button>
 
         {/* Header */}
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-500 text-xs font-semibold uppercase tracking-wider mb-2">
+        <div className="text-center mb-3 sm:mb-5 pr-4 pl-4">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full bg-emerald-500/15 text-emerald-500 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-1 sm:mb-2">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             Yala Safari Portal
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight">
             {authMode === 'login' ? 'Welcome Back' : 'Create an Account'}
           </h2>
           <p
-            className={`text-xs sm:text-sm mt-1.5 ${
+            className={`text-[11px] sm:text-xs md:text-sm mt-0.5 sm:mt-1 ${
               isDark ? 'text-neutral-400' : 'text-emerald-800/70'
             }`}
           >
@@ -160,7 +171,7 @@ export default function AuthModal() {
 
         {/* Tab Switcher */}
         <div
-          className={`grid grid-cols-2 p-1 rounded-xl mb-6 border ${
+          className={`grid grid-cols-2 p-1 rounded-xl mb-3 sm:mb-5 border ${
             isDark
               ? 'bg-white/5 border-white/5'
               : 'bg-emerald-50 border-emerald-200/50'
@@ -172,7 +183,7 @@ export default function AuthModal() {
               setAuthMode('login');
               setError('');
             }}
-            className={`py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+            className={`py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
               authMode === 'login'
                 ? isDark
                   ? 'bg-emerald-600 text-white shadow-md'
@@ -190,7 +201,7 @@ export default function AuthModal() {
               setAuthMode('register');
               setError('');
             }}
-            className={`py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
+            className={`py-1.5 sm:py-2 text-xs sm:text-sm font-semibold rounded-lg transition-all ${
               authMode === 'register'
                 ? isDark
                   ? 'bg-emerald-600 text-white shadow-md'
@@ -206,38 +217,66 @@ export default function AuthModal() {
 
         {/* Alerts */}
         {error && (
-          <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center">
+          <div className="mb-3 p-2.5 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 text-xs text-center">
             {error}
           </div>
         )}
         {success && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs flex items-center justify-center gap-2">
+          <div className="mb-3 p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs flex items-center justify-center gap-2">
             <FiCheck className="w-4 h-4" />
             {success}
           </div>
         )}
 
         {/* Form */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {authMode === 'register' && (
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          <div className={`grid gap-2.5 sm:gap-4 ${authMode === 'register' ? 'grid-cols-1 sm:grid-cols-2' : 'grid-cols-1'}`}>
+            {authMode === 'register' && (
+              <div>
+                <label
+                  className={`block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-1 ${
+                    isDark ? 'text-neutral-300' : 'text-emerald-900'
+                  }`}
+                >
+                  Full Name *
+                </label>
+                <div className="relative">
+                  <FiUser className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <input
+                    type="text"
+                    name="name"
+                    required
+                    value={form.name}
+                    onChange={handleChange}
+                    placeholder="e.g. John Doe"
+                    className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm outline-none transition-all border ${
+                      isDark
+                        ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
+                        : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
+                    }`}
+                  />
+                </div>
+              </div>
+            )}
+
             <div>
               <label
-                className={`block text-[11px] font-semibold uppercase tracking-wider mb-1.5 ${
+                className={`block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-1 ${
                   isDark ? 'text-neutral-300' : 'text-emerald-900'
                 }`}
               >
-                Full Name *
+                Email Address *
               </label>
               <div className="relative">
-                <FiUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 w-4 h-4" />
+                <FiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <input
-                  type="text"
-                  name="name"
+                  type="email"
+                  name="email"
                   required
-                  value={form.name}
+                  value={form.email}
                   onChange={handleChange}
-                  placeholder="e.g. John Doe"
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all border ${
+                  placeholder="your@email.com"
+                  className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm outline-none transition-all border ${
                     isDark
                       ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
                       : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
@@ -245,109 +284,83 @@ export default function AuthModal() {
                 />
               </div>
             </div>
-          )}
 
-          <div>
-            <label
-              className={`block text-[11px] font-semibold uppercase tracking-wider mb-1.5 ${
-                isDark ? 'text-neutral-300' : 'text-emerald-900'
-              }`}
-            >
-              Email Address *
-            </label>
-            <div className="relative">
-              <FiMail className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 w-4 h-4" />
-              <input
-                type="email"
-                name="email"
-                required
-                value={form.email}
-                onChange={handleChange}
-                placeholder="your@email.com"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all border ${
-                  isDark
-                    ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
-                    : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
-                }`}
-              />
-            </div>
-          </div>
+            {authMode === 'register' && (
+              <div>
+                <label
+                  className={`block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-1 ${
+                    isDark ? 'text-neutral-300' : 'text-emerald-900'
+                  }`}
+                >
+                  WhatsApp / Phone
+                </label>
+                <div className="relative">
+                  <FiPhone className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    placeholder="+94 77 123 4567"
+                    className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm outline-none transition-all border ${
+                      isDark
+                        ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
+                        : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
+                    }`}
+                  />
+                </div>
+              </div>
+            )}
 
-          {authMode === 'register' && (
             <div>
               <label
-                className={`block text-[11px] font-semibold uppercase tracking-wider mb-1.5 ${
+                className={`block text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider mb-1 ${
                   isDark ? 'text-neutral-300' : 'text-emerald-900'
                 }`}
               >
-                WhatsApp / Phone (Optional)
+                Password *
               </label>
               <div className="relative">
-                <FiPhone className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 w-4 h-4" />
+                <FiLock className="absolute left-3 top-1/2 -translate-y-1/2 text-neutral-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 <input
-                  type="tel"
-                  name="phone"
-                  value={form.phone}
+                  type="password"
+                  name="password"
+                  required
+                  value={form.password}
                   onChange={handleChange}
-                  placeholder="+94 77 123 4567"
-                  className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all border ${
+                  placeholder="••••••••"
+                  className={`w-full pl-9 sm:pl-10 pr-3 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm outline-none transition-all border ${
                     isDark
                       ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
                       : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
                   }`}
                 />
               </div>
-            </div>
-          )}
-
-          <div>
-            <label
-              className={`block text-[11px] font-semibold uppercase tracking-wider mb-1.5 ${
-                isDark ? 'text-neutral-300' : 'text-emerald-900'
-              }`}
-            >
-              Password *
-            </label>
-            <div className="relative">
-              <FiLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-400 w-4 h-4" />
-              <input
-                type="password"
-                name="password"
-                required
-                value={form.password}
-                onChange={handleChange}
-                placeholder="••••••••"
-                className={`w-full pl-10 pr-4 py-3 rounded-xl text-sm outline-none transition-all border ${
-                  isDark
-                    ? 'bg-white/5 border-white/10 text-white placeholder-neutral-500 focus:border-emerald-400 focus:ring-1 focus:ring-emerald-400'
-                    : 'bg-neutral-50 border-emerald-200 text-[#0d2b0d] placeholder-neutral-400 focus:border-emerald-600 focus:ring-1 focus:ring-emerald-600'
-                }`}
-              />
             </div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className={`w-full mt-4 py-3.5 rounded-xl font-semibold text-sm transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.02] shadow-lg disabled:opacity-50 ${
+            className={`w-full mt-2.5 sm:mt-3 py-2.5 sm:py-3 rounded-xl font-semibold text-xs sm:text-sm transition-all duration-300 flex items-center justify-center gap-2 hover:scale-[1.01] shadow-lg disabled:opacity-50 ${
               isDark
                 ? 'bg-emerald-500 text-black hover:bg-emerald-400 hover:shadow-[0_0_25px_rgba(52,211,153,0.4)]'
                 : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_20px_rgba(16,185,129,0.3)]'
             }`}
           >
             {loading ? (
-              <span className="w-5 h-5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+              <span className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin" />
             ) : (
               <>
                 <span>{authMode === 'login' ? 'Login Now' : 'Create My Account'}</span>
-                <FiArrowRight className="w-4 h-4" />
+                <FiArrowRight className="w-3.5 h-3.5" />
               </>
             )}
           </button>
         </form>
 
         {/* Footer info */}
-        <div className="mt-5 text-center">
+        <div className="mt-4 text-center">
           <p className="text-xs text-neutral-400">
             {authMode === 'login' ? (
               <>
