@@ -59,10 +59,9 @@ export default function Gallery() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-16 reveal">
-          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md mb-6 ${isDark ? 'bg-white/5 border border-white/10' : 'bg-emerald-600/10 border border-emerald-400/25'}`}>
-            <span className="text-[10px] md:text-xs font-medium tracking-widest text-emerald-500 uppercase">Wildlife of Yala</span>
-          </div>
-          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black mt-2 mb-6 tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>Safari Gallery</h2>
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>
+            Wildlife of <span className="gradient-text">Yala</span>
+          </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full mx-auto mb-8" />
           <p className={`max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
             Every photo is a memory from our jeep trails — Sri Lankan leopards, Asian elephants, sloth bears, peacocks and more await inside Yala National Park.

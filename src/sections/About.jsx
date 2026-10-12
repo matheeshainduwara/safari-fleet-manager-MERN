@@ -1,11 +1,51 @@
 import { useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
-const features = [
-  { title: 'Leopard Tracking', desc: 'Yala has the world\'s highest density of wild leopards. Our trackers know every territory and give you the best sighting chances.' },
-  { title: 'Premium Jeeps', desc: 'Open-top 4x4 Toyota Land Cruisers built for Yala\'s rugged terrain — with charging ports, coolers, and expert drivers.' },
-  { title: 'Dawn & Dusk Drives', desc: 'Early morning and evening drives when leopards, elephants, and sloth bears are most active in the park.' },
-  { title: 'Licensed & Safe', desc: 'Fully licensed by the Sri Lanka Department of Wildlife Conservation. Safety-trained guides on every drive.' },
+const stats = [
+  { value: '10+', label: 'Years in Yala' },
+  { value: '5k+', label: 'Happy Guests' },
+  { value: '98%', label: 'Satisfaction' },
+  { value: '100%', label: 'Licensed & Safe' },
+];
+
+const pillars = [
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+      </svg>
+    ),
+    title: 'Expert Trackers',
+    desc: "Our guides have spent over a decade reading Yala's terrain — every trail, waterhole, and leopard corridor.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" /><circle cx="12" cy="10" r="3" />
+      </svg>
+    ),
+    title: 'Prime Locations',
+    desc: "We operate exclusively in Block 1 — Yala's most biodiverse zone, home to leopards, elephants & sloth bears.",
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <rect x="2" y="7" width="20" height="14" rx="2" /><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" /><line x1="12" y1="12" x2="12" y2="16" /><line x1="10" y1="14" x2="14" y2="14" />
+      </svg>
+    ),
+    title: 'Premium Jeeps',
+    desc: 'Open-top 4×4 Land Cruisers with coolers, charging ports, and binoculars for the perfect safari experience.',
+  },
+  {
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5">
+        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+        <path d="m9 12 2 2 4-4" />
+      </svg>
+    ),
+    title: 'Eco-Responsible',
+    desc: "Fully licensed by Sri Lanka's Dept. of Wildlife Conservation — we protect what we show you.",
+  },
 ];
 
 export default function About() {
@@ -18,18 +58,17 @@ export default function About() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.querySelectorAll('.reveal').forEach((el, i) => {
-              setTimeout(() => el.classList.add('visible'), i * 120);
+              setTimeout(() => el.classList.add('visible'), i * 100);
             });
           }
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0.08 }
     );
     if (sectionRef.current) observer.observe(sectionRef.current);
     return () => observer.disconnect();
   }, []);
 
-  // Re-apply visible class after theme change re-renders the DOM
   useEffect(() => {
     if (!sectionRef.current) return;
     sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
@@ -38,93 +77,173 @@ export default function About() {
   }, [isDark]);
 
   return (
-    <section id="about" ref={sectionRef} className={`py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans transition-colors duration-300 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf0] text-[#0d2b0d]'}`}>
-      {/* Dynamic Background Effects matching Hero */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-600/10 rounded-full blur-[120px] pointer-events-none mix-blend-screen" />
-      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-green-900/20 rounded-full blur-[150px] pointer-events-none mix-blend-screen" />
-      <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
+    <section
+      id="about"
+      ref={sectionRef}
+      style={{ backgroundColor: 'var(--section-bg)', color: 'var(--text-primary)' }}
+      className="relative py-24 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans"
+    >
+      {/* Subtle ambient blobs */}
+      <div
+        className="pointer-events-none absolute -top-32 -right-32 w-[480px] h-[480px] rounded-full blur-[140px]"
+        style={{ background: isDark ? 'rgba(52,211,153,0.07)' : 'rgba(52,211,153,0.12)' }}
+      />
+      <div
+        className="pointer-events-none absolute -bottom-32 -left-32 w-[520px] h-[520px] rounded-full blur-[160px]"
+        style={{ background: isDark ? 'rgba(22,101,52,0.12)' : 'rgba(22,101,52,0.08)' }}
+      />
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Header */}
+      <div className="relative z-10 max-w-6xl mx-auto">
+
+        {/* ── Heading ── */}
         <div className="text-center mb-16 reveal">
-          <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full backdrop-blur-md mb-6 ${isDark ? 'bg-white/5 border border-white/10' : 'bg-emerald-600/10 border border-emerald-400/25'}`}>
-            <span className="text-[10px] md:text-xs font-medium tracking-widest text-emerald-500 uppercase">Our Story</span>
-          </div>
-          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black mt-2 mb-6 tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>About Yala Safari Jeep</h2>
+          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>
+            About <span className="gradient-text">Us</span>
+          </h2>
           <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full mx-auto mb-8" />
-          <p className={`max-w-2xl mx-auto text-base sm:text-lg leading-relaxed font-light ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
-            Born from a deep love of Sri Lanka's wild places, Yala Safari Jeep has been taking guests deep into the heart of Yala National Park since 2014 — crafting wildlife encounters that last a lifetime.
+
+          <p className={`max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
+            Since 2014, we've been guiding adventurers deep into Yala National Park — crafting wildlife
+            encounters that stay with you for a lifetime.
           </p>
         </div>
 
-        {/* Two-column layout */}
-        <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-24">
+        {/* ── Two-column: Image + Story ── */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center mb-20">
+
           {/* Image */}
           <div className="reveal relative">
-            <div className={`relative rounded-[2.5rem] overflow-hidden shadow-2xl backdrop-blur-sm group ${isDark ? 'border border-white/10 bg-neutral-900/50' : 'border border-emerald-300/30 bg-white/60'}`}>
-              <img src="/images/about.jpg" alt="Expert Yala safari guide with jeep in Yala National Park Sri Lanka" className="w-full h-80 sm:h-[28rem] object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-700 ease-out" />
-              <div className={`absolute inset-0 bg-gradient-to-t via-transparent to-transparent opacity-80 ${isDark ? 'from-[#0a0f0d]' : 'from-[#f0faf0]/70'}`} />
+            <div
+              className="relative rounded-3xl overflow-hidden group"
+              style={{
+                border: '1px solid var(--border)',
+                background: 'var(--bg-card)',
+                boxShadow: 'var(--card-shadow)',
+              }}
+            >
+              <img
+                src="/images/about.jpg"
+                alt="Safari guide with jeep in Yala National Park, Sri Lanka"
+                className="w-full h-72 sm:h-[26rem] object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+
+              {/* Star badge overlay */}
+              <div
+                className="absolute bottom-5 left-5 flex items-center gap-2 px-4 py-2 rounded-full backdrop-blur-md"
+                style={{ background: 'rgba(0,0,0,0.45)', border: '1px solid rgba(255,255,255,0.15)' }}
+              >
+                <span className="flex gap-0.5">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </span>
+                <span className="text-white text-xs font-medium">Top Rated on TripAdvisor</span>
+              </div>
             </div>
-            
-            {/* Floating glass cards */}
-            <div className={`absolute -bottom-6 -right-4 sm:-right-8 backdrop-blur-xl rounded-2xl p-5 shadow-[0_0_30px_rgba(0,0,0,0.3)] transform hover:-translate-y-2 transition-transform duration-500 ${isDark ? 'bg-white/10 border border-white/20' : 'bg-white/90 border border-emerald-300/40 shadow-emerald-100'}`}>
-              <div className="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-br from-emerald-500 to-green-600">10+</div>
-              <div className={`text-xs tracking-wider uppercase font-medium mt-1 ${isDark ? 'text-neutral-300' : 'text-[#4a7a4a]'}`}>Years in Yala</div>
-              <div className="flex mt-3 gap-1">{[...Array(5)].map((_, i) => <span key={i} className="text-emerald-500 text-xs">★</span>)}</div>
-            </div>
-            
-            <div className={`absolute -top-6 -left-4 sm:-left-6 backdrop-blur-xl rounded-2xl p-4 text-center shadow-[0_0_30px_rgba(0,0,0,0.2)] transform hover:-translate-y-2 transition-transform duration-500 ${isDark ? 'bg-white/10 border border-white/20' : 'bg-white/90 border border-emerald-300/40'}`}>
-              <svg className="w-8 h-8 text-emerald-500 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-              <div className={`text-xs font-medium uppercase tracking-wider mt-2 ${isDark ? 'text-neutral-300' : 'text-[#4a7a4a]'}`}>Sri Lanka</div>
+
+            {/* Floating stat chip */}
+            <div
+              className="absolute -top-5 -right-4 sm:-right-6 px-5 py-3 rounded-2xl backdrop-blur-xl text-center hover:-translate-y-1 transition-transform duration-300"
+              style={{
+                background: 'var(--bg-glass)',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--card-shadow)',
+              }}
+            >
+              <div className="text-3xl font-black stat-number leading-none">10+</div>
+              <div
+                className="text-[11px] font-medium mt-1 uppercase tracking-wider"
+                style={{ color: 'var(--text-muted)' }}
+              >
+                Years in Yala
+              </div>
             </div>
           </div>
 
-          {/* Text */}
-          <div className="space-y-8 text-center lg:text-left">
+          {/* Story */}
+          <div className="space-y-7">
             <div className="reveal">
-              <h3 className={`text-3xl sm:text-4xl font-bold mb-6 leading-tight tracking-tight ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>
-                Yala's Most Trusted <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-green-500">Jeep Safari</span> Service
-              </h3>
-              <p className={`leading-relaxed mb-5 font-light text-base sm:text-lg ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
-                Founded by veteran wildlife tracker <strong className={`font-medium ${isDark ? 'text-white' : 'text-[#1a4d1a]'}`}>Suresh Bandara</strong>, our team has spent over a decade learning every trail, waterhole, and leopard territory inside Yala National Park's iconic Block 1 — Sri Lanka's most biodiverse wildlife zone.
+              <p className="text-base leading-relaxed mb-4 font-light" style={{ color: 'var(--text-muted)' }}>
+                Founded by veteran tracker{' '}
+                <strong style={{ color: 'var(--text-secondary)', fontWeight: 600 }}>Suresh Bandara</strong>,
+                Yala Safari Jeep grew from a single jeep and an obsession with Yala's wildlife into the park's
+                most-requested safari service.
               </p>
-              <p className={`leading-relaxed font-light text-base sm:text-lg ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
-                We operate exclusively within the park regulations set by the Department of Wildlife Conservation Sri Lanka, ensuring a respectful, sustainable experience that protects the wildlife and habitat for generations to come.
+              <p className="text-base leading-relaxed font-light" style={{ color: 'var(--text-muted)' }}>
+                We operate strictly within guidelines set by the Department of Wildlife Conservation — so every
+                sighting is ethical, every experience is sustainable, and the park stays wild for generations.
               </p>
             </div>
 
-            <div className="reveal grid grid-cols-2 gap-3 sm:gap-4 pt-2">
-              {[
-                { label: 'Leopard Sightings' },
-                { label: 'Elephant Herds' },
-                { label: 'Top Rated on TripAdvisor' },
-                { label: 'Eco-Responsible' },
-              ].map((item) => (
-                <div key={item.label} className={`backdrop-blur-md rounded-xl p-3 sm:p-4 flex items-center justify-center transition-colors duration-300 text-center cursor-default ${isDark ? 'bg-white/5 border border-white/10 hover:bg-white/10' : 'bg-white/80 border border-emerald-300/35 hover:bg-emerald-50/80'}`}>
-                  <span className={`text-xs sm:text-sm font-medium ${isDark ? 'text-neutral-200' : 'text-[#1a4d1a]'}`}>{item.label}</span>
+            {/* Stats row */}
+            <div className="reveal grid grid-cols-2 sm:grid-cols-4 gap-3">
+              {stats.map((s) => (
+                <div
+                  key={s.label}
+                  className="text-center py-4 px-2 rounded-2xl transition-all duration-300 hover:-translate-y-0.5"
+                  style={{
+                    background: 'var(--bg-card)',
+                    border: '1px solid var(--border)',
+                    boxShadow: 'var(--card-shadow)',
+                  }}
+                >
+                  <div className="text-2xl font-black stat-number leading-none mb-1">{s.value}</div>
+                  <div
+                    className="text-[10px] font-medium uppercase tracking-wider"
+                    style={{ color: 'var(--text-muted)' }}
+                  >
+                    {s.label}
+                  </div>
                 </div>
               ))}
             </div>
 
-            <div className="reveal pt-4 flex justify-center lg:justify-start">
-              <button onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`group relative w-full sm:w-auto px-8 py-3.5 sm:py-4 font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 ${isDark ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.2)]' : 'bg-[#166534] text-white hover:bg-[#15803d] hover:shadow-[0_0_30px_rgba(22,101,52,0.3)]'}`}>
-                <span className="relative z-10 flex items-center justify-center gap-2">Book a Jeep Now <span className="group-hover:translate-x-1 transition-transform">→</span></span>
-                {isDark && <div className="absolute inset-0 bg-emerald-50 transform scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500 ease-out" />}
+            {/* CTA */}
+            <div className="reveal pt-1">
+              <button
+                onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
+                className="group inline-flex items-center gap-2 px-7 py-3.5 rounded-full font-semibold text-sm transition-all duration-300 hover:scale-105 hover:shadow-lg"
+                style={{ background: 'var(--btn-primary-bg)', color: 'var(--btn-primary-text)' }}
+              >
+                Book a Jeep Safari
+                <span className="group-hover:translate-x-1 transition-transform duration-300">→</span>
               </button>
             </div>
           </div>
         </div>
 
-        {/* Feature Cards */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {features.map((f, i) => (
-            <div key={f.title} className={`reveal backdrop-blur-md rounded-2xl p-8 transition-all duration-500 group cursor-default ${isDark ? 'bg-white/5 border border-white/10 hover:bg-white/10 hover:border-emerald-500/30' : 'bg-white/80 border border-emerald-300/35 hover:bg-white hover:border-emerald-400/50 shadow-sm hover:shadow-md'}`} style={{ transitionDelay: `${i * 80}ms` }}>
-              <h4 className={`font-bold text-lg mb-3 tracking-wide ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>{f.title}</h4>
-              <p className={`text-sm leading-relaxed font-light ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>{f.desc}</p>
+        {/* ── Feature pillars ── */}
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          {pillars.map((p, i) => (
+            <div
+              key={p.title}
+              className="reveal group p-6 rounded-2xl cursor-default transition-all duration-300 hover:-translate-y-1"
+              style={{
+                background: 'var(--bg-card)',
+                border: '1px solid var(--border)',
+                boxShadow: 'var(--card-shadow)',
+                transitionDelay: `${i * 70}ms`,
+              }}
+            >
+              <div
+                className="w-10 h-10 flex items-center justify-center rounded-xl mb-4 text-emerald-500 transition-colors duration-300 group-hover:bg-emerald-500 group-hover:text-white"
+                style={{ background: 'var(--icon-bg)', border: '1px solid var(--border)' }}
+              >
+                {p.icon}
+              </div>
+              <h4 className="font-bold text-base mb-2" style={{ color: 'var(--text-primary)' }}>
+                {p.title}
+              </h4>
+              <p className="text-sm leading-relaxed font-light" style={{ color: 'var(--text-muted)' }}>
+                {p.desc}
+              </p>
             </div>
           ))}
         </div>
+
       </div>
     </section>
   );
