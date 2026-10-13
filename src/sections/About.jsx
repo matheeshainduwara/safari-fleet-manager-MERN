@@ -93,8 +93,11 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className="relative scroll-mt-24 sm:scroll-mt-28 pt-8 sm:pt-12 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans"
-      style={{ backgroundColor: 'var(--section-bg)', color: 'var(--text-primary)' }}
+      className={`relative scroll-mt-24 sm:scroll-mt-28 pt-12 sm:pt-16 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans transition-colors duration-500 border-y ${
+        isDark
+          ? 'bg-[#0e1713] border-white/[0.06] text-white'
+          : 'bg-[#e7f5ea] border-emerald-900/10 text-[#0d2b0d]'
+      }`}
     >
       {/* Ambient glow */}
       <div
