@@ -109,27 +109,29 @@ export default function About() {
       <div className="relative z-10 max-w-5xl mx-auto">
 
         {/* HEADER */}
-        <div className="mb-12 sm:mb-16 reveal">
-          <div className="flex items-center gap-2 mb-5">
-            <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest"
-              style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--border)' }}
+        <div className="mb-5 sm:mb-7 reveal grid lg:grid-cols-[0.95fr_1fr] gap-8 lg:gap-12 items-end">
+          <div>
+            <div className="flex items-center gap-2 mb-4">
+              <span
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest"
+                style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--border)' }}
+              >
+                <Star className="w-2.5 h-2.5" />
+                Since 2014
+              </span>
+            </div>
+
+            <h2
+              className="text-[2rem] sm:text-[2.6rem] md:text-[3rem] font-black tracking-tight leading-[1.08]"
+              style={{ color: 'var(--text-primary)' }}
             >
-              <Star className="w-2.5 h-2.5" />
-              Since 2014
-            </span>
+              The heart behind<br />
+              <span className="gradient-text">every safari.</span>
+            </h2>
           </div>
 
-          <h2
-            className="text-[2rem] sm:text-[2.6rem] md:text-[3rem] font-black tracking-tight leading-[1.08] mb-4"
-            style={{ color: 'var(--text-primary)' }}
-          >
-            The heart behind<br />
-            <span className="gradient-text">every safari.</span>
-          </h2>
-
           <p
-            className={`text-[15px] sm:text-base leading-relaxed max-w-md font-normal ${isDark ? 'text-white/90' : 'text-emerald-950/85'}`}
+            className={`text-[15px] sm:text-[15.5px] leading-relaxed font-normal ${isDark ? 'text-white/90' : 'text-emerald-950/85'}`}
           >
             Since 2014, we have been guiding adventurers deep into Yala National Park,
             crafting wildlife encounters that stay with you for a lifetime.
@@ -150,38 +152,6 @@ export default function About() {
                 alt="Safari guide with jeep at Yala National Park, Sri Lanka"
                 className="w-full h-60 sm:h-[22rem] lg:h-[26rem] object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent pointer-events-none" />
-
-              {/* Rating badge */}
-              <div
-                className="absolute bottom-4 left-4 flex items-center gap-2 px-3 py-1.5 rounded-lg backdrop-blur-sm"
-                style={{ background: 'rgba(0,0,0,0.55)', border: '1px solid rgba(255,255,255,0.12)' }}
-              >
-                <span className="flex gap-0.5">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-2.5 h-2.5 text-emerald-400" />
-                  ))}
-                </span>
-                <span className="text-white text-[11px] font-medium">Top Rated on TripAdvisor</span>
-              </div>
-
-              {/* Floating year badge */}
-              <div
-                className="absolute -top-3 -right-3 sm:-right-4 w-[72px] h-[72px] rounded-2xl flex flex-col items-center justify-center backdrop-blur-xl"
-                style={{
-                  background: 'var(--bg-glass)',
-                  border: '1px solid var(--border)',
-                  boxShadow: 'var(--card-shadow)',
-                }}
-              >
-                <span className="text-xl font-black stat-number leading-none">10+</span>
-                <span
-                  className="text-[8.5px] font-semibold uppercase tracking-wider mt-0.5 text-center leading-tight px-1"
-                  style={{ color: 'var(--text-muted)' }}
-                >
-                  Yrs Yala
-                </span>
-              </div>
             </div>
           </div>
 
