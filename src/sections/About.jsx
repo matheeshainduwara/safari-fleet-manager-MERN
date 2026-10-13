@@ -213,6 +213,29 @@ export default function About() {
           style={{ height: '1px', background: 'var(--border)' }}
         />
 
+        {/* PILLARS HEADER */}
+        <div className="reveal mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <div>
+            <span
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-3"
+              style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--border)' }}
+            >
+              Our Strengths
+            </span>
+            <h3
+              className="text-2xl sm:text-3xl font-black tracking-tight leading-snug"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Why you choose <span className="gradient-text">us</span>
+            </h3>
+          </div>
+          <p
+            className={`text-xs sm:text-[13px] leading-relaxed max-w-sm font-normal ${isDark ? 'text-white/80' : 'text-emerald-950/75'}`}
+          >
+            Built on over a decade of tracking expertise, uncompromising safety, and ethical wildlife exploration.
+          </p>
+        </div>
+
         {/* PILLARS */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {pillars.map((p, i) => (
