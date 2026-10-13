@@ -1,19 +1,19 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+﻿import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
 const slides = [
-  { src: '/images/gallery_1.jpg', label: 'Sri Lankan Leopard',      sub: 'Yala Block 1' },
-  { src: '/images/gallery_2.jpg', label: 'Elephant Bathing',        sub: 'Menik River, Yala' },
-  { src: '/images/gallery_5.jpg', label: 'Jeep Safari Encounter',   sub: 'Yala National Park' },
-  { src: '/images/gallery_4.jpg', label: 'Sloth Bear & Cubs',       sub: 'Yala Block 1' },
-  { src: '/images/about.jpg',     label: 'Our Safari Jeep',         sub: 'Ready for the Wild' },
+  { src: '/images/gallery_1.jpg', label: 'Sri Lankan Leopard', sub: 'Yala Block 1' },
+  { src: '/images/gallery_2.jpg', label: 'Elephant Bathing', sub: 'Menik River, Yala' },
+  { src: '/images/gallery_5.jpg', label: 'Jeep Safari Encounter', sub: 'Yala National Park' },
+  { src: '/images/gallery_4.jpg', label: 'Sloth Bear & Cubs', sub: 'Yala Block 1' },
+  { src: '/images/about.jpg', label: 'Our Safari Jeep', sub: 'Ready for the Wild' },
 ];
 
 export default function Hero() {
-  const textRef  = useRef(null);
+  const textRef = useRef(null);
   const { isDark } = useTheme();
-  const [current,   setCurrent]   = useState(0);
+  const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
 
   const goTo = useCallback((idx) => {
@@ -71,9 +71,8 @@ export default function Hero() {
           }}
         >
           <div
-            className={`absolute -inset-[100%] transition-opacity duration-1000 ${
-              isDark ? 'opacity-65 mix-blend-screen' : 'opacity-55 mix-blend-multiply'
-            }`}
+            className={`absolute -inset-[100%] transition-opacity duration-1000 ${isDark ? 'opacity-65 mix-blend-screen' : 'opacity-55 mix-blend-multiply'
+              }`}
             style={{
               backgroundImage: isDark
                 ? 'conic-gradient(from 180deg at 50% 50%, rgba(16, 185, 129, 0.35) 0deg, rgba(6, 95, 70, 0.05) 90deg, rgba(52, 211, 153, 0.3) 180deg, rgba(6, 95, 70, 0.05) 270deg, rgba(16, 185, 129, 0.35) 360deg)'
@@ -86,9 +85,8 @@ export default function Hero() {
 
         {/* Soft breathing pulse behind the center carousel card */}
         <div
-          className={`absolute top-1/2 right-[12%] -translate-y-1/2 w-[520px] h-[520px] rounded-full blur-[110px] pointer-events-none transition-all duration-700 ${
-            isDark ? 'bg-emerald-500/35' : 'bg-emerald-400/40'
-          }`}
+          className={`absolute top-1/2 right-[12%] -translate-y-1/2 w-[520px] h-[520px] rounded-full blur-[110px] pointer-events-none transition-all duration-700 ${isDark ? 'bg-emerald-500/35' : 'bg-emerald-400/40'
+            }`}
           style={{
             animation: 'cardAuraPulse 7s ease-in-out infinite alternate',
           }}
@@ -96,9 +94,8 @@ export default function Hero() {
 
         {/* Enhanced grid texture overlay for depth */}
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            isDark ? 'opacity-[0.07]' : 'opacity-[0.06]'
-          }`}
+          className={`absolute inset-0 transition-opacity duration-500 ${isDark ? 'opacity-[0.07]' : 'opacity-[0.06]'
+            }`}
           style={{
             backgroundImage: isDark
               ? 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)'
@@ -162,8 +159,8 @@ export default function Hero() {
               if (diff < -Math.floor(slides.length / 2)) diff += slides.length;
 
               const isCenter = diff === 0;
-              const isPrev   = diff === -1;
-              const isNext   = diff === 1;
+              const isPrev = diff === -1;
+              const isNext = diff === 1;
               const isVisible = Math.abs(diff) <= 1;
 
               let translateX = '0%';
@@ -202,9 +199,8 @@ export default function Hero() {
                   }}
                   aria-label={isPrev ? 'Previous photo' : isNext ? 'Next photo' : undefined}
                   role={!isCenter && isVisible ? 'button' : undefined}
-                  className={`group absolute rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden select-none ${
-                    isCenter ? 'cursor-default' : isVisible ? 'cursor-pointer' : 'pointer-events-none'
-                  }`}
+                  className={`group absolute rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden select-none ${isCenter ? 'cursor-default' : isVisible ? 'cursor-pointer' : 'pointer-events-none'
+                    }`}
                   style={{
                     width: '64%',
                     height: '92%',
@@ -220,16 +216,14 @@ export default function Hero() {
                   <img
                     src={slide.src}
                     alt=""
-                    className={`w-full h-full object-cover transition-transform duration-700 ease-out ${
-                      isCenter ? 'group-hover:scale-[1.04]' : ''
-                    }`}
+                    className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isCenter ? 'group-hover:scale-[1.04]' : ''
+                      }`}
                   />
                   <div
-                    className={`absolute inset-0 transition-opacity duration-500 ${
-                      isCenter
+                    className={`absolute inset-0 transition-opacity duration-500 ${isCenter
                         ? 'bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-80'
                         : 'bg-black/30'
-                    }`}
+                      }`}
                   />
                 </div>
               );
@@ -240,9 +234,8 @@ export default function Hero() {
               <button
                 onClick={prev}
                 aria-label="Previous slide"
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
-                  isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
-                }`}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
+                  }`}
               >
                 <FiChevronLeft className="w-4 h-4" />
               </button>
@@ -253,13 +246,12 @@ export default function Hero() {
                     key={i}
                     onClick={() => goTo(i)}
                     aria-label={`Go to slide ${i + 1}`}
-                    className={`rounded-full transition-all duration-300 ${
-                      i === current
+                    className={`rounded-full transition-all duration-300 ${i === current
                         ? 'w-5 h-1.5 bg-emerald-500'
                         : isDark
-                        ? 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
-                        : 'w-1.5 h-1.5 bg-black/30 hover:bg-black/70'
-                    }`}
+                          ? 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
+                          : 'w-1.5 h-1.5 bg-black/30 hover:bg-black/70'
+                      }`}
                   />
                 ))}
               </div>
@@ -267,9 +259,8 @@ export default function Hero() {
               <button
                 onClick={next}
                 aria-label="Next slide"
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
-                  isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
-                }`}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
+                  }`}
               >
                 <FiChevronRight className="w-4 h-4" />
               </button>
