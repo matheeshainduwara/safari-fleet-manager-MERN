@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import {
   FiCompass,
@@ -12,10 +12,10 @@ import {
 
 /* ── Data ─────────────────────────────────────────────────── */
 const stats = [
-  { value: '10+', label: 'Years in Yala' },
-  { value: '5k+', label: 'Happy Guests' },
-  { value: '98%', label: 'Satisfaction' },
-  { value: '100%', label: 'Licensed & Safe' },
+  { target: 10, suffix: '+', label: 'Years in Yala' },
+  { target: 5, suffix: 'k+', label: 'Happy Guests' },
+  { target: 98, suffix: '%', label: 'Satisfaction' },
+  { target: 100, suffix: '%', label: 'Licensed & Safe' },
 ];
 
 const pillars = [
@@ -53,35 +53,108 @@ const pillars = [
   },
 ];
 
+/* ── Smooth Stat Counter Component ────────────────────────── */
+function StatCounter({ target, suffix, isVisible, delay = 0 }) {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    if (!isVisible) return;
+
+    let frameId;
+    const timer = setTimeout(() => {
+      let startTime = null;
+      const duration = 1600; // 1.6s smooth duration
+
+      const step = (timestamp) => {
+        if (!startTime) startTime = timestamp;
+        const elapsed = timestamp - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        // Cubic ease-out: brisk start and smooth deceleration
+        const easeOut = 1 - Math.pow(1 - progress, 3);
+        setCount(Math.round(easeOut * target));
+
+        if (progress < 1) {
+          frameId = requestAnimationFrame(step);
+        } else {
+          setCount(target);
+        }
+      };
+
+      frameId = requestAnimationFrame(step);
+    }, delay);
+
+    return () => {
+      clearTimeout(timer);
+      if (frameId) cancelAnimationFrame(frameId);
+    };
+  }, [isVisible, target, delay]);
+
+  return (
+    <span>
+      {count}
+      {suffix}
+    </span>
+  );
+}
 
 /* ── Component ───────────────────────────────────────────── */
 export default function About() {
   const sectionRef = useRef(null);
+  const statsRef = useRef(null);
+  const [statsVisible, setStatsVisible] = useState(false);
   const { isDark } = useTheme();
 
   useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const revealElements = el.querySelectorAll('.reveal');
+    if (!revealElements.length) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
+      (entries, obs) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.reveal').forEach((el, i) => {
-              setTimeout(() => el.classList.add('visible'), i * 90);
-            });
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.05 }
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px',
+      }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    revealElements.forEach((child) => observer.observe(child));
     return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
     if (!sectionRef.current) return;
-    sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 55);
+    sectionRef.current.querySelectorAll('.reveal.visible').forEach((el) => {
+      el.classList.add('visible');
     });
   }, [isDark]);
+
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setStatsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.2 }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <section
@@ -160,8 +233,8 @@ export default function About() {
             </div>
 
             {/* Stats — always 2-col on mobile, 4-col on sm+ */}
-            <div className="reveal grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              {stats.map((s) => (
+            <div ref={statsRef} className="reveal grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              {stats.map((s, idx) => (
                 <div
                   key={s.label}
                   className="py-4 px-2 rounded-xl text-center transition-transform duration-300 hover:-translate-y-0.5"
@@ -171,7 +244,9 @@ export default function About() {
                     boxShadow: 'var(--card-shadow)',
                   }}
                 >
-                  <div className="text-xl sm:text-2xl font-black stat-number leading-none mb-1">{s.value}</div>
+                  <div className="text-xl sm:text-2xl font-black stat-number leading-none mb-1">
+                    <StatCounter target={s.target} suffix={s.suffix} isVisible={statsVisible} delay={idx * 70} />
+                  </div>
                   <div className="text-[9.5px] font-semibold uppercase tracking-widest" style={{ color: 'var(--text-muted)' }}>
                     {s.label}
                   </div>
