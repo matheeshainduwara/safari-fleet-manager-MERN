@@ -1,5 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useTheme } from '../context/ThemeContext';
+import {
+  FiCompass,
+  FiMapPin,
+  FiTruck,
+  FiShield,
+  FiCheckCircle,
+  FiArrowUpRight,
+} from 'react-icons/fi';
 
 /* ── Data ─────────────────────────────────────────────────── */
 const stats = [
@@ -11,54 +19,43 @@ const stats = [
 
 const pillars = [
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M3 12a9 9 0 1 0 18 0 9 9 0 0 0-18 0" />
-        <path d="M3.6 9h16.8M3.6 15h16.8M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18" />
-      </svg>
-    ),
+    step: '01',
+    tag: 'Field Mastery',
     title: 'Expert Trackers',
     desc: "Our guides have spent over a decade reading Yala's terrain — every trail, waterhole, and leopard corridor.",
+    highlight: '10+ Years Field Exp',
+    icon: FiCompass,
+    accentGlow: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M12 22s-8-4.5-8-11.8A8 8 0 0 1 12 2a8 8 0 0 1 8 8.2c0 7.3-8 11.8-8 11.8z" /><circle cx="12" cy="10" r="3" />
-      </svg>
-    ),
+    step: '02',
+    tag: 'Priority Entry',
     title: 'Prime Locations',
-    desc: "Exclusive access to Block 1 — Yala's most biodiverse zone, home to leopards, elephants & sloth bears.",
+    desc: "Exclusive access to Block 1 & 5 — Yala's most biodiverse zones, home to leopards, elephants & sloth bears.",
+    highlight: 'Block 1 Exclusive Permits',
+    icon: FiMapPin,
+    accentGlow: 'from-green-500/20 via-green-500/5 to-transparent',
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <rect x="1" y="3" width="15" height="13" rx="2" />
-        <path d="M16 8h4l3 5v3h-7V8zM5.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zM18.5 21a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z" />
-      </svg>
-    ),
+    step: '03',
+    tag: 'Custom Fleet',
     title: 'Premium Jeeps',
-    desc: 'Open-top 4×4 Land Cruisers with coolers, charging ports, and binoculars for the perfect safari.',
+    desc: 'Open-top 4×4 Land Cruisers with cushioned seating, coolers, USB charging ports, and precision optics.',
+    highlight: 'Cushioned 4×4 & Optics',
+    icon: FiTruck,
+    accentGlow: 'from-teal-500/20 via-teal-500/5 to-transparent',
   },
   {
-    icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" strokeLinejoin="round" width="18" height="18">
-        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-        <path d="m9 12 2 2 4-4" />
-      </svg>
-    ),
+    step: '04',
+    tag: 'Wildlife Ethics',
     title: 'Eco-Responsible',
-    desc: "Fully licensed by Sri Lanka's Dept. of Wildlife Conservation — we protect what we show you.",
+    desc: "Fully licensed by Sri Lanka's Dept. of Wildlife Conservation — we strictly protect and respect what we show you.",
+    highlight: 'Govt. DWC Licensed',
+    icon: FiShield,
+    accentGlow: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
   },
 ];
 
-/* ── Star SVG ─────────────────────────────────────────────── */
-function Star({ className }) {
-  return (
-    <svg className={className} fill="currentColor" viewBox="0 0 20 20">
-      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-    </svg>
-  );
-}
 
 /* ── Component ───────────────────────────────────────────── */
 export default function About() {
@@ -93,11 +90,10 @@ export default function About() {
     <section
       id="about"
       ref={sectionRef}
-      className={`relative scroll-mt-24 sm:scroll-mt-28 pt-12 sm:pt-16 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans transition-colors duration-500 border-y ${
-        isDark
+      className={`relative scroll-mt-24 sm:scroll-mt-28 pt-12 sm:pt-16 pb-20 sm:pb-28 px-4 sm:px-6 lg:px-8 overflow-hidden font-sans transition-colors duration-500 border-y ${isDark
           ? 'bg-[#0e1713] border-white/[0.06] text-white'
           : 'bg-[#e7f5ea] border-emerald-900/10 text-[#0d2b0d]'
-      }`}
+        }`}
     >
       {/* Ambient glow */}
       <div
@@ -114,16 +110,6 @@ export default function About() {
         {/* HEADER */}
         <div className="mb-5 sm:mb-7 reveal grid lg:grid-cols-[0.95fr_1fr] gap-8 lg:gap-12 items-end">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <span
-                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest"
-                style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--border)' }}
-              >
-                <Star className="w-2.5 h-2.5" />
-                Since 2014
-              </span>
-            </div>
-
             <h2
               className="text-[2rem] sm:text-[2.6rem] md:text-[3rem] font-black tracking-tight leading-[1.08]"
               style={{ color: 'var(--text-primary)' }}
@@ -142,7 +128,7 @@ export default function About() {
         </div>
 
         {/* MAIN GRID */}
-        <div className="grid lg:grid-cols-[0.95fr_1fr] gap-8 lg:gap-12 items-start mb-14 sm:mb-20">
+        <div className="grid lg:grid-cols-[0.95fr_1fr] gap-8 lg:gap-12 items-center mb-14 sm:mb-20">
 
           {/* Image */}
           <div className="reveal">
@@ -153,13 +139,13 @@ export default function About() {
               <img
                 src="/images/about.jpg"
                 alt="Safari guide with jeep at Yala National Park, Sri Lanka"
-                className="w-full h-60 sm:h-[22rem] lg:h-[26rem] object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
+                className="w-full h-56 sm:h-72 lg:h-[21rem] object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
               />
             </div>
           </div>
 
           {/* Story + Stats + CTA */}
-          <div className="space-y-6">
+          <div className="space-y-6 flex flex-col justify-center">
 
             {/* Story text */}
             <div className="reveal space-y-3.5">
@@ -210,66 +196,122 @@ export default function About() {
           </div>
         </div>
 
-        {/* DIVIDER */}
-        <div
-          className="reveal mb-10 sm:mb-14"
-          style={{ height: '1px', background: 'var(--border)' }}
-        />
+        {/* MODERN SECTION SEPARATOR */}
+        <div className="reveal relative mb-12 sm:mb-16">
+          <div className="h-px w-full bg-gradient-to-r from-transparent via-emerald-500/35 to-transparent" />
+          <div
+            className="absolute left-1/2 -top-1.5 -translate-x-1/2 w-3 h-3 rotate-45 border border-emerald-500/40"
+            style={{ background: isDark ? '#0e1713' : '#e7f5ea' }}
+          />
+        </div>
 
         {/* PILLARS HEADER */}
-        <div className="reveal mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-          <div>
-            <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold uppercase tracking-widest mb-3"
-              style={{ background: 'var(--badge-bg)', color: 'var(--badge-text)', border: '1px solid var(--border)' }}
-            >
-              Our Strengths
-            </span>
+        <div className="reveal mb-8 sm:mb-10 flex flex-col md:flex-row md:items-end justify-between gap-5 sm:gap-8">
+          <div className="max-w-xl">
             <h3
-              className="text-2xl sm:text-3xl font-black tracking-tight leading-snug"
+              className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tight leading-[1.12]"
               style={{ color: 'var(--text-primary)' }}
             >
               Why you choose <span className="gradient-text">us</span>
             </h3>
           </div>
-          <p
-            className={`text-xs sm:text-[13px] leading-relaxed max-w-sm font-normal ${isDark ? 'text-white/80' : 'text-emerald-950/75'}`}
-          >
-            Built on over a decade of tracking expertise, uncompromising safety, and ethical wildlife exploration.
-          </p>
+
+          <div className="md:max-w-md">
+            <p
+              className={`text-justify text-xs sm:text-[13.5px] leading-relaxed font-normal mb-3 ${isDark ? 'text-white/80' : 'text-emerald-950/80'
+                }`}
+            >
+              Built on over a decade of tracking expertise, uncompromising safety, and ethical wildlife exploration across Yala's most secluded zones.
+            </p>
+            <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1.5 text-xs font-semibold text-emerald-700 dark:text-emerald-400">
+              <span className="inline-flex items-center gap-1.5">
+                <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                100% Ethical Wildlife Policy
+              </span>
+              <span className="inline-flex items-center gap-1.5">
+                <FiCheckCircle className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                DWC Licensed Naturalists
+              </span>
+            </div>
+          </div>
         </div>
 
-        {/* PILLARS */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {pillars.map((p, i) => (
-            <div
-              key={p.title}
-              className="reveal group p-5 rounded-2xl transition-all duration-300 hover:-translate-y-1 hover:shadow-lg cursor-default"
-              style={{
-                background: 'var(--bg-card)',
-                border: '1px solid var(--border)',
-                boxShadow: 'var(--card-shadow)',
-                transitionDelay: i * 55 + 'ms',
-              }}
-            >
+        {/* MODERN PILLAR BENTO CARDS */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {pillars.map((p, i) => {
+            const Icon = p.icon;
+            return (
               <div
-                className="w-9 h-9 flex items-center justify-center rounded-xl mb-3.5 transition-all duration-300 group-hover:bg-emerald-500 group-hover:text-white"
+                key={p.title}
+                className="reveal group relative flex flex-col justify-between p-6 rounded-2xl sm:rounded-3xl transition-all duration-500 hover:-translate-y-2 cursor-default overflow-hidden backdrop-blur-md"
                 style={{
-                  background: 'var(--icon-bg)',
+                  background: 'var(--bg-card)',
                   border: '1px solid var(--border)',
-                  color: 'var(--text-secondary)',
+                  boxShadow: 'var(--card-shadow)',
+                  transitionDelay: i * 60 + 'ms',
                 }}
               >
-                {p.icon}
+                {/* Glowing Top Border Highlight Accent */}
+                <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/40 to-transparent group-hover:h-[3px] group-hover:via-emerald-400 transition-all duration-500" />
+
+                {/* Ambient Card Hover Glow */}
+                <div
+                  className={`pointer-events-none absolute inset-0 bg-gradient-to-b ${p.accentGlow} opacity-0 group-hover:opacity-100 transition-opacity duration-500`}
+                />
+
+                {/* Top Row: Icon + Watermark Step Number */}
+                <div className="relative z-10 flex items-center justify-between mb-5">
+                  <div
+                    className="w-12 h-12 flex items-center justify-center rounded-2xl transition-all duration-500 group-hover:scale-110 group-hover:-rotate-3 group-hover:shadow-[0_8px_20px_rgba(16,185,129,0.35)]"
+                    style={{
+                      background: 'var(--icon-bg)',
+                      border: '1px solid var(--border)',
+                      color: 'var(--text-secondary)',
+                    }}
+                  >
+                    <Icon className="w-5 h-5 transition-colors duration-300 group-hover:text-emerald-500 dark:group-hover:text-emerald-300" />
+                  </div>
+
+                  {/* Watermark Index */}
+                  <span className="font-mono text-2xl font-black tracking-tight opacity-20 group-hover:opacity-50 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-all duration-300 select-none">
+                    {p.step}
+                  </span>
+                </div>
+
+                {/* Middle Content */}
+                <div className="relative z-10 space-y-2 mb-5">
+                  <span className="text-[10.5px] font-bold uppercase tracking-wider text-emerald-600 dark:text-emerald-400 block">
+                    {p.tag}
+                  </span>
+                  <h4
+                    className="font-bold text-lg sm:text-[1.15rem] leading-snug tracking-tight"
+                    style={{ color: 'var(--text-primary)' }}
+                  >
+                    {p.title}
+                  </h4>
+                  <p
+                    className={`text-[13px] sm:text-[13.5px] leading-relaxed font-normal ${isDark ? 'text-white/80' : 'text-emerald-950/80'
+                      }`}
+                  >
+                    {p.desc}
+                  </p>
+                </div>
+
+                {/* Bottom Highlight Pill */}
+                <div
+                  className="relative z-10 pt-3.5 border-t flex items-center justify-between mt-auto"
+                  style={{ borderColor: 'var(--border)' }}
+                >
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-emerald-700 dark:text-emerald-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                    {p.highlight}
+                  </span>
+
+                  <FiArrowUpRight className="w-4 h-4 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300 text-emerald-600 dark:text-emerald-400" />
+                </div>
               </div>
-              <h4 className="font-semibold text-[14px] mb-1.5 leading-snug" style={{ color: 'var(--text-primary)' }}>
-                {p.title}
-              </h4>
-              <p className={`text-[13px] leading-relaxed font-normal ${isDark ? 'text-white/90' : 'text-emerald-950/85'}`}>
-                {p.desc}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>
