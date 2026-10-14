@@ -9,23 +9,30 @@ import AdminGallery from './admin/pages/AdminGallery.jsx';
 import AdminJeeps from './admin/pages/AdminJeeps.jsx';
 import AdminBookings from './admin/pages/AdminBookings.jsx';
 import AdminMessages from './admin/pages/AdminMessages.jsx';
+import { ThemeProvider } from './context/ThemeContext';
+import { AuthProvider } from './context/AuthContext';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <BrowserRouter>
-      <Routes>
-        {/* Public site */}
-        <Route path="/" element={<App />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            {/* Public site */}
+            <Route path="/" element={<App />} />
 
-        {/* Admin panel */}
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route index element={<AdminDashboard />} />
-          <Route path="gallery" element={<AdminGallery />} />
-          <Route path="jeeps" element={<AdminJeeps />} />
-          <Route path="bookings" element={<AdminBookings />} />
-          <Route path="messages" element={<AdminMessages />} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+            {/* Admin panel */}
+            <Route path="/admin" element={<AdminLayout />}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="gallery" element={<AdminGallery />} />
+              <Route path="jeeps" element={<AdminJeeps />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="messages" element={<AdminMessages />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   </StrictMode>,
 );
+

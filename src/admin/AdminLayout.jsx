@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import AdminLogin from './AdminLogin';
 
 const navItems = [
   {
@@ -58,6 +60,13 @@ const navItems = [
 export default function AdminLayout() {
   const [collapsed, setCollapsed] = useState(false);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
+
+  const isAdmin = user && (user.role === 'admin' || user.isAdmin === true || user.email === 'admin@yalasafari.lk');
+
+  if (!isAdmin) {
+    return <AdminLogin />;
+  }
 
   return (
     <div className="min-h-screen bg-[#0b0f0e] text-white flex font-sans">
@@ -130,20 +139,34 @@ export default function AdminLayout() {
         <div className={`border-t border-white/5 p-3 ${collapsed ? 'flex justify-center' : ''}`}>
           <div className={`flex items-center gap-3 ${collapsed ? '' : 'px-1'}`}>
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-green-600 flex items-center justify-center text-xs font-bold text-white shrink-0">
-              A
+              {user?.name ? user.name.charAt(0).toUpperCase() : 'A'}
             </div>
             {!collapsed && (
               <div className="flex-1 min-w-0">
-                <p className="text-xs font-semibold text-white truncate">Admin</p>
-                <p className="text-[10px] text-neutral-500 truncate">admin@yalasafari.lk</p>
+                <p className="text-xs font-semibold text-white truncate">{user?.name || 'Administrator'}</p>
+                <p className="text-[10px] text-neutral-500 truncate">{user?.email || 'admin@yalasafari.lk'}</p>
               </div>
             )}
             {!collapsed && (
-              <button onClick={() => navigate('/')} className="text-neutral-500 hover:text-white transition-colors" title="Go to site">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                </svg>
-              </button>
+              <div className="flex items-center gap-1">
+                <button onClick={() => navigate('/')} className="p-1 rounded-lg text-neutral-400 hover:text-white hover:bg-white/5 transition-colors" title="Go to site">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => {
+                    logout();
+                    navigate('/admin');
+                  }}
+                  className="p-1 rounded-lg text-neutral-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+                  title="Sign out of Admin"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                  </svg>
+                </button>
+              </div>
             )}
           </div>
         </div>
@@ -175,6 +198,19 @@ export default function AdminLayout() {
               </svg>
               View Site
             </a>
+            <button
+              onClick={() => {
+                logout();
+                navigate('/admin');
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-medium hover:bg-red-500/20 transition-all"
+              title="Sign Out"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              Sign Out
+            </button>
           </div>
         </header>
 
