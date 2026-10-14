@@ -1,4 +1,4 @@
-﻿import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
@@ -128,10 +128,10 @@ export default function Hero() {
               Experience the world's highest density of wild leopards and majestic elephants on an unforgettable jeep safari through Yala National Park.
             </p>
 
-            <div className="flex flex-row items-center justify-center lg:justify-start gap-3 sm:gap-3.5 w-full sm:w-auto">
+            <div className="flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-3.5">
               <button
                 onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`group relative flex-1 sm:flex-initial px-5 py-3 sm:px-8 sm:py-3.5 font-semibold text-sm sm:text-base text-center rounded-full overflow-hidden transition-all hover:scale-105 ${isDark ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]'}`}
+                className={`group relative inline-flex items-center justify-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 font-semibold text-sm sm:text-base text-center rounded-full overflow-hidden transition-all duration-300 hover:scale-105 active:scale-[0.98] ${isDark ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]' : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]'}`}
               >
                 <span className="relative z-10">Book Safari</span>
                 {isDark && <div className="absolute inset-0 bg-emerald-50 scale-x-0 origin-left group-hover:scale-x-100 transition-transform duration-500" />}
@@ -139,7 +139,7 @@ export default function Hero() {
 
               <button
                 onClick={() => document.querySelector('#gallery')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`group flex-1 sm:flex-initial px-4 py-3 sm:px-8 sm:py-3.5 font-medium text-sm sm:text-base rounded-full transition-all duration-300 flex items-center justify-center gap-2 sm:gap-2.5 backdrop-blur-md ${isDark ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10' : 'bg-white/70 border border-emerald-300/60 text-emerald-800 hover:bg-white'}`}
+                className={`group px-5 py-3 sm:px-8 sm:py-3.5 font-medium text-sm sm:text-base rounded-full transition-all duration-300 flex items-center justify-center gap-2 sm:gap-2.5 backdrop-blur-md hover:scale-105 active:scale-[0.98] ${isDark ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10' : 'bg-white/70 border border-emerald-300/60 text-emerald-800 hover:bg-white shadow-sm'}`}
               >
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${isDark ? 'bg-white/10 text-emerald-400' : 'bg-emerald-100 text-emerald-700'}`}>
                   <FiImage className="w-3.5 h-3.5" />
