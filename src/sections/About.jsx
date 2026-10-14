@@ -22,7 +22,7 @@ const pillars = [
   {
     tag: 'Field Mastery',
     title: 'Expert Trackers',
-    desc: "Our guides have spent over a decade reading Yala's terrain — every trail, waterhole, and leopard corridor.",
+    desc: "Our guides have spent over a decade reading Yala's terrain every trail, waterhole, and leopard corridor.",
     highlight: '10+ Years Field Exp',
     icon: FiCompass,
     accentGlow: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
@@ -30,7 +30,7 @@ const pillars = [
   {
     tag: 'Priority Entry',
     title: 'Prime Locations',
-    desc: "Exclusive access to Block 1 & 5 — Yala's most biodiverse zones, home to leopards, elephants & sloth bears.",
+    desc: "Exclusive access to Block 1 & 5 Yala's most biodiverse zones, home to leopards, elephants & sloth bears.",
     highlight: 'Block 1 Exclusive Permits',
     icon: FiMapPin,
     accentGlow: 'from-green-500/20 via-green-500/5 to-transparent',
@@ -46,7 +46,7 @@ const pillars = [
   {
     tag: 'Wildlife Ethics',
     title: 'Eco-Responsible',
-    desc: "Fully licensed by Sri Lanka's Dept. of Wildlife Conservation — we strictly protect and respect what we show you.",
+    desc: "Fully licensed by Sri Lanka's Dept. of Wildlife Conservation we strictly protect and respect what we show you.",
     highlight: 'Govt. DWC Licensed',
     icon: FiShield,
     accentGlow: 'from-emerald-500/20 via-emerald-500/5 to-transparent',
@@ -153,7 +153,7 @@ export default function About() {
                 into the park's most-requested safari service.
               </p>
               <p className={`text-[15px] sm:text-[15.5px] leading-relaxed font-normal ${isDark ? 'text-white/90' : 'text-emerald-950/85'}`}>
-                We operate strictly within guidelines set by the Department of Wildlife Conservation —
+                We operate strictly within guidelines set by the Department of Wildlife Conservation
                 so every sighting is ethical, every experience sustainable, and the park stays
                 wild for generations.
               </p>
@@ -184,8 +184,8 @@ export default function About() {
               <button
                 onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
                 className={`group relative inline-flex items-center justify-center gap-2.5 px-6 py-3 sm:px-8 sm:py-3.5 font-semibold text-sm sm:text-base text-center rounded-full overflow-hidden transition-all duration-300 hover:scale-105 active:scale-[0.98] ${isDark
-                    ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]'
-                    : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]'
+                  ? 'bg-white text-black hover:shadow-[0_0_40px_rgba(255,255,255,0.3)]'
+                  : 'bg-emerald-700 text-white hover:bg-emerald-800 hover:shadow-[0_0_30px_rgba(16,185,129,0.4)]'
                   }`}
               >
                 <span className="relative z-10">Book a Jeep</span>
@@ -196,16 +196,14 @@ export default function About() {
 
               <button
                 onClick={() => document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' })}
-                className={`group px-5 py-3 sm:px-7 sm:py-3.5 font-medium text-sm sm:text-base rounded-full transition-all duration-300 flex items-center justify-center gap-2 sm:gap-2.5 backdrop-blur-md hover:scale-105 active:scale-[0.98] ${
-                  isDark
-                    ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
-                    : 'bg-white/70 border border-emerald-300/60 text-emerald-800 hover:bg-white shadow-sm'
-                }`}
+                className={`group px-5 py-3 sm:px-7 sm:py-3.5 font-medium text-sm sm:text-base rounded-full transition-all duration-300 flex items-center justify-center gap-2 sm:gap-2.5 backdrop-blur-md hover:scale-105 active:scale-[0.98] ${isDark
+                  ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10'
+                  : 'bg-white/70 border border-emerald-300/60 text-emerald-800 hover:bg-white shadow-sm'
+                  }`}
               >
                 <div
-                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${
-                    isDark ? 'bg-white/10 text-emerald-400' : 'bg-emerald-100 text-emerald-700'
-                  }`}
+                  className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 transition-transform duration-300 group-hover:scale-110 ${isDark ? 'bg-white/10 text-emerald-400' : 'bg-emerald-100 text-emerald-700'
+                    }`}
                 >
                   <FiMail className="w-3.5 h-3.5" />
                 </div>
@@ -326,7 +324,6 @@ export default function About() {
                     {p.highlight}
                   </span>
 
-                  <FiArrowUpRight className="w-4 h-4 opacity-0 -translate-x-1 translate-y-1 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-300 text-emerald-600 dark:text-emerald-400" />
                 </div>
               </div>
             );
