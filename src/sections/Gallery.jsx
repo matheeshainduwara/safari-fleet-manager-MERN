@@ -59,9 +59,28 @@ export default function Gallery() {
     });
   }, [isDark]);
 
-  const displayImages = images;
+  const [displayImages, setDisplayImages] = useState(images);
+
+  useEffect(() => {
+    fetch('/api/gallery')
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setDisplayImages(
+            data.map((d) => ({
+              src: d.imageUrl || d.src,
+              title: d.title,
+              desc: d.desc || 'Yala National Park, Sri Lanka',
+              tag: d.tag || 'Wildlife',
+            }))
+          );
+        }
+      })
+      .catch((err) => console.warn('Using default gallery images fallback:', err));
+  }, []);
 
   const tagCls = `text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full mb-3 inline-block tracking-wider uppercase ${isDark ? 'bg-white/10 border border-white/20 text-white backdrop-blur-md' : 'bg-black/30 border border-white/20 text-white backdrop-blur-md'}`;
+
 
   return (
     <section id="gallery" ref={sectionRef} className={`py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans transition-colors duration-300 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf0] text-[#0d2b0d]'}`}>
