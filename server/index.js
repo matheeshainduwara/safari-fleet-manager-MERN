@@ -28,8 +28,10 @@ app.use('/api/packages', require('./routes/packages'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/auth', require('./routes/auth'));
 
-// Health check
+// Root & Health check
+app.get('/', (req, res) => res.json({ status: 'ok', message: 'Safari Portal API is running 🚀', endpoints: ['/api/gallery', '/api/bookings', '/api/packages', '/api/messages', '/api/auth', '/api/health'] }));
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'Safari Portal API running' }));
+
 
 // ─── MongoDB Connection ───────────────────────────────────────────────────────
 mongoose.connect(process.env.MONGODB_URI)
