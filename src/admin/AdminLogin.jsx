@@ -25,12 +25,6 @@ export default function AdminLogin({ onLoginSuccess }) {
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  const fillDemoCredentials = () => {
-    setEmail('admin@yalasafari.lk');
-    setPassword('admin123');
-    setError('');
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
@@ -44,82 +38,50 @@ export default function AdminLogin({ onLoginSuccess }) {
     setLoading(true);
 
     try {
-      // 1. First attempt to authenticate against the live server endpoint if available
-      let authenticated = false;
-      let userData = null;
+      const res = await fetch('/api/auth/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: email.trim(), password }),
+      });
 
-      try {
-        const res = await fetch('/api/auth/login', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: email.trim(), password }),
-        });
+      const data = await res.json();
 
-        const data = await res.json();
-
-        if (res.ok && data.user) {
-          if (data.user.role === 'admin' || data.user.email === 'admin@yalasafari.lk') {
-            authenticated = true;
-            userData = data.user;
-            if (data.token) {
-              localStorage.setItem('safari_token', data.token);
-            }
-          } else {
-            setError('Access Denied: This account does not possess administrator privileges.');
-            setLoading(false);
-            return;
-          }
-        }
-      } catch (networkErr) {
-        // Server might be offline in development — proceed to fallback verification
-        console.warn('Backend login endpoint unavailable, checking local admin credentials:', networkErr);
+      if (!res.ok) {
+        setError(data.error || 'Invalid administrator email or password.');
+        return;
       }
 
-      // 2. Built-in master admin verification for offline or dev use
-      if (!authenticated) {
-        const normalizedEmail = email.trim().toLowerCase();
-        const validAdminEmails = ['admin@yalasafari.lk', 'admin@gmail.com', 'admin@yala.lk'];
-        const validPasswords = ['admin123', 'admin', 'safari123', 'password123'];
-
-        if (
-          validAdminEmails.includes(normalizedEmail) &&
-          validPasswords.includes(password)
-        ) {
-          authenticated = true;
-          userData = {
-            id: 'admin-001',
-            name: 'Safari Administrator',
-            email: normalizedEmail,
-            role: 'admin',
-          };
+      if (data.admin) {
+        if (data.token) {
+          localStorage.setItem('safari_token', data.token);
         }
-      }
-
-      if (authenticated && userData) {
         setSuccess('Authentication verified. Redirecting to dashboard...');
         setTimeout(() => {
-          login(userData);
+          login(data.admin);
           if (onLoginSuccess) {
-            onLoginSuccess(userData);
+            onLoginSuccess(data.admin);
           } else {
             navigate('/admin');
           }
         }, 600);
       } else {
-        setError('Invalid administrator email or password. Please try again.');
+        setError('Unexpected error during authentication. Please try again.');
       }
     } catch (err) {
-      setError(err.message || 'An error occurred during authentication.');
+      setError('Unable to reach authentication server. Please check your network connection.');
     } finally {
       setLoading(false);
     }
   };
 
+
   return (
-    <div className="h-[100dvh] min-h-[500px] w-full bg-[#070b09] text-white flex flex-col justify-between items-center py-3 sm:py-5 px-4 relative overflow-y-auto sm:overflow-hidden font-sans selection:bg-emerald-500 selection:text-white">
-      {/* Background Animated Glowing Ambient Orbs */}
-      <div className="absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-emerald-600/15 blur-[140px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-5%] w-[480px] h-[480px] rounded-full bg-teal-600/10 blur-[150px] pointer-events-none" />
+    <div className="min-h-[100dvh] w-full max-w-[100vw] bg-[#070b09] text-white flex flex-col justify-between items-center py-2 sm:py-5 px-3 sm:px-4 relative overflow-x-hidden overflow-y-auto no-scrollbar font-sans selection:bg-emerald-500 selection:text-white">
+      {/* Background Animated Glowing Ambient Orbs — constrained to prevent horizontal scroll */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-5%] w-[450px] h-[450px] rounded-full bg-emerald-600/15 blur-[140px]" />
+        <div className="absolute bottom-[-10%] right-[-5%] w-[480px] h-[480px] rounded-full bg-teal-600/10 blur-[150px]" />
+      </div>
 
       {/* Grid Pattern Overlay */}
       <div
@@ -131,7 +93,7 @@ export default function AdminLogin({ onLoginSuccess }) {
       />
 
       {/* Top Header / Back Link */}
-      <div className="w-full max-w-sm flex items-center justify-between z-10 shrink-0">
+      <div className="w-full max-w-[340px] sm:max-w-sm flex items-center justify-between z-10 shrink-0 pt-1 sm:pt-0">
         <button
           onClick={() => navigate('/')}
           className="inline-flex items-center gap-1.5 text-xs font-medium text-neutral-400 hover:text-white transition-colors group py-1"
@@ -146,38 +108,38 @@ export default function AdminLogin({ onLoginSuccess }) {
       </div>
 
       {/* Main Login Card */}
-      <div className="relative w-full max-w-sm z-10 my-auto">
+      <div className="relative w-full max-w-[340px] sm:max-w-sm z-10 my-auto py-2 sm:py-0">
         {/* Glow halo behind card */}
-        <div className="absolute -inset-1 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-emerald-500/20 via-teal-500/10 to-emerald-500/20 blur-lg opacity-70 pointer-events-none" />
+        <div className="absolute -inset-0.5 rounded-2xl sm:rounded-3xl bg-gradient-to-r from-emerald-500/20 via-teal-500/10 to-emerald-500/20 blur-md opacity-70 pointer-events-none" />
 
-        <div className="relative rounded-2xl sm:rounded-3xl bg-[#0e1511]/95 border border-white/10 p-5 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
+        <div className="relative rounded-2xl sm:rounded-3xl bg-[#0e1511]/95 border border-white/10 p-4 sm:p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] backdrop-blur-2xl">
           {/* Top Decorative Border Accent */}
           <div className="absolute inset-x-0 top-0 h-[2px] bg-gradient-to-r from-transparent via-emerald-400/80 to-transparent rounded-t-2xl sm:rounded-t-3xl" />
 
           {/* Logo & Header */}
-          <div className="text-center mb-4">
-            <div className="mx-auto w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-700 flex items-center justify-center shadow-[0_0_20px_rgba(52,211,153,0.4)] mb-2.5 border border-emerald-300/30">
-              <span className="text-white text-base font-black tracking-wider" style={{ fontFamily: 'Playfair Display, serif' }}>
+          <div className="text-center mb-3 sm:mb-4">
+            <div className="mx-auto w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-to-br from-emerald-400 via-green-500 to-emerald-700 flex items-center justify-center shadow-[0_0_20px_rgba(52,211,153,0.4)] mb-2 sm:mb-2.5 border border-emerald-300/30">
+              <span className="text-white text-sm sm:text-base font-black tracking-wider" style={{ fontFamily: 'Playfair Display, serif' }}>
                 YS
               </span>
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-1.5">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/10 border border-emerald-500/25 text-emerald-400 text-[10px] font-bold uppercase tracking-widest mb-1 sm:mb-1.5">
               <FiShield className="w-2.5 h-2.5 text-emerald-400" />
               <span>Restricted Access</span>
             </div>
 
-            <h1 className="text-lg sm:text-xl font-extrabold text-white tracking-tight">
+            <h1 className="text-base sm:text-xl font-extrabold text-white tracking-tight">
               Sign In to Dashboard
             </h1>
-            <p className="text-[11px] sm:text-xs text-neutral-400 mt-1 max-w-xs mx-auto leading-normal">
+            <p className="text-[11px] sm:text-xs text-neutral-400 mt-0.5 sm:mt-1 max-w-xs mx-auto leading-normal">
               Enter your administrator credentials to access the portal.
             </p>
           </div>
 
           {/* Error Message */}
           {error && (
-            <div className="mb-3.5 p-2.5 rounded-lg bg-red-500/10 border border-red-500/25 text-red-300 text-[11px] flex items-start gap-2 animate-fadeIn">
+            <div className="mb-3 p-2 sm:p-2.5 rounded-lg bg-red-500/10 border border-red-500/25 text-red-300 text-[11px] flex items-start gap-2 animate-fadeIn">
               <FiAlertCircle className="w-3.5 h-3.5 text-red-400 shrink-0 mt-0.5" />
               <span className="leading-snug">{error}</span>
             </div>
@@ -185,17 +147,17 @@ export default function AdminLogin({ onLoginSuccess }) {
 
           {/* Success Message */}
           {success && (
-            <div className="mb-3.5 p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[11px] flex items-center gap-2 animate-fadeIn">
+            <div className="mb-3 p-2 sm:p-2.5 rounded-lg bg-emerald-500/10 border border-emerald-500/25 text-emerald-300 text-[11px] flex items-center gap-2 animate-fadeIn">
               <FiCheckCircle className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
               <span>{success}</span>
             </div>
           )}
 
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3">
+          <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3">
             {/* Email Field */}
             <div>
-              <label className="block text-[11px] font-semibold text-neutral-300 uppercase tracking-wider mb-1">
+              <label className="block text-[10px] sm:text-[11px] font-semibold text-neutral-300 uppercase tracking-wider mb-1">
                 Admin Email
               </label>
               <div className="relative">
@@ -220,7 +182,7 @@ export default function AdminLogin({ onLoginSuccess }) {
             {/* Password Field */}
             <div>
               <div className="flex items-center justify-between mb-1">
-                <label className="block text-[11px] font-semibold text-neutral-300 uppercase tracking-wider">
+                <label className="block text-[10px] sm:text-[11px] font-semibold text-neutral-300 uppercase tracking-wider">
                   Password
                 </label>
               </div>
@@ -253,7 +215,7 @@ export default function AdminLogin({ onLoginSuccess }) {
 
             {/* Remember Me Option */}
             <div className="flex items-center justify-between pt-0.5">
-              <label className="flex items-center gap-2 cursor-pointer text-[11px] text-neutral-400 select-none hover:text-neutral-300">
+              <label className="flex items-center gap-2 cursor-pointer text-[10px] sm:text-[11px] text-neutral-400 select-none hover:text-neutral-300">
                 <input
                   type="checkbox"
                   checked={rememberMe}
@@ -268,7 +230,7 @@ export default function AdminLogin({ onLoginSuccess }) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full mt-1.5 group relative py-2.5 sm:py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-[#070b09] shadow-[0_4px_20px_rgba(52,211,153,0.3)] hover:shadow-[0_4px_30px_rgba(52,211,153,0.5)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-60 disabled:pointer-events-none"
+              className="w-full mt-1 sm:mt-1.5 group relative py-2.5 sm:py-3 px-4 rounded-xl font-bold text-xs sm:text-sm bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-[#070b09] shadow-[0_4px_20px_rgba(52,211,153,0.3)] hover:shadow-[0_4px_30px_rgba(52,211,153,0.5)] transition-all duration-300 hover:scale-[1.01] active:scale-[0.99] flex items-center justify-center gap-2 disabled:opacity-60 disabled:pointer-events-none"
             >
               {loading ? (
                 <>
@@ -283,28 +245,14 @@ export default function AdminLogin({ onLoginSuccess }) {
               )}
             </button>
           </form>
-
-          {/* Quick Demo Credential Pill */}
-          <div className="mt-3.5 pt-3 border-t border-white/5 flex items-center justify-between text-[11px]">
-            <span className="text-neutral-400 truncate">
-              Demo:{' '}
-              <span className="font-mono text-emerald-400 font-semibold">admin@yalasafari.lk</span>
-            </span>
-            <button
-              type="button"
-              onClick={fillDemoCredentials}
-              className="font-semibold text-emerald-400 hover:text-emerald-300 transition-colors underline decoration-dotted underline-offset-2 shrink-0 ml-2"
-            >
-              Autofill
-            </button>
-          </div>
         </div>
       </div>
 
       {/* Bottom Footer Notice */}
-      <div className="text-center text-[10px] sm:text-[11px] text-neutral-500 z-10 shrink-0">
+      <div className="text-center text-[10px] sm:text-[11px] text-neutral-500 z-10 shrink-0 py-1">
         &copy; {new Date().getFullYear()} Yala Safari Jeep Management Portal
       </div>
     </div>
   );
 }
+

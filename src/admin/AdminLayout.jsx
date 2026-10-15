@@ -62,7 +62,13 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const { user, logout } = useAuth();
 
-  const isAdmin = user && (user.role === 'admin' || user.isAdmin === true || user.email === 'admin@yalasafari.lk');
+  const isAdmin =
+    user &&
+    (user.role === 'admin' ||
+      user.role === 'superadmin' ||
+      user.role === 'moderator' ||
+      user.isAdmin === true ||
+      user.email === 'admin@yalasafari.lk');
 
   if (!isAdmin) {
     return <AdminLogin />;
