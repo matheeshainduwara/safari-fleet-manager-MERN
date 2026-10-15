@@ -167,7 +167,38 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 }
 
 
-/* Gallery hover zoom */
+/* Gallery hover zoom & scroll reveal */
+.gallery-card-reveal {
+  opacity: 0;
+  transform: translateY(42px) scale(0.97);
+  transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s ease,
+              border-color 0.4s ease;
+  will-change: opacity, transform;
+}
+
+.gallery-card-reveal.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.gallery-card-reveal.visible:hover {
+  transform: translateY(-4px) scale(1.008);
+}
+
+.gallery-img-smooth {
+  transition: opacity 0.75s ease-out,
+              transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1),
+              filter 0.5s ease;
+  will-change: transform, opacity;
+}
+
+.gallery-card-reveal:hover .gallery-img-smooth {
+  transform: scale(1.06);
+  filter: brightness(1.08) contrast(1.02);
+}
+
 .gallery-img {
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
 }
@@ -175,6 +206,7 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
   transform: scale(1.08);
   filter: brightness(1.1);
 }
+
 
 /* Input focus glow */
 .safari-input:focus {

@@ -13,21 +13,35 @@ export default function Gallery() {
   const sectionRef = useRef(null);
   const { isDark } = useTheme();
   const [lightbox, setLightbox] = useState(null);
+  const [loadedImages, setLoadedImages] = useState({});
 
   useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+
+    const animElements = section.querySelectorAll('.gallery-card-reveal, .reveal');
+    if (!animElements.length) return;
+
     const observer = new IntersectionObserver(
-      (entries) => {
+      (entries, obs) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            entry.target.querySelectorAll('.reveal').forEach((el, i) => {
-              setTimeout(() => el.classList.add('visible'), i * 100);
-            });
+            const delay = entry.target.dataset.delay || 0;
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+              entry.target.setAttribute('data-revealed', 'true');
+            }, Number(delay));
+            obs.unobserve(entry.target);
           }
         });
       },
-      { threshold: 0.05 }
+      {
+        threshold: 0.12,
+        rootMargin: '0px 0px -40px 0px',
+      }
     );
-    if (sectionRef.current) observer.observe(sectionRef.current);
+
+    animElements.forEach((el) => observer.observe(el));
     return () => observer.disconnect();
   }, []);
 
@@ -40,17 +54,14 @@ export default function Gallery() {
   // Re-apply visible class after theme change re-renders the DOM
   useEffect(() => {
     if (!sectionRef.current) return;
-    sectionRef.current.querySelectorAll('.reveal').forEach((el, i) => {
-      setTimeout(() => el.classList.add('visible'), i * 60);
+    sectionRef.current.querySelectorAll('[data-revealed="true"]').forEach((el) => {
+      el.classList.add('visible');
     });
   }, [isDark]);
 
-  const displayImages = [
-    images[0], images[1], images[2], images[3],
-    { ...images[3], src: '/images/gallery_1.jpg', title: 'Leopard Close-Up', desc: 'Yala Block 1, Sri Lanka', tag: 'Leopard' },
-  ];
+  const displayImages = images;
 
-  const tagCls = `text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full mb-3 inline-block tracking-wider uppercase ${isDark ? 'bg-white/10 border border-white/20 text-white' : 'bg-black/30 border border-white/20 text-white'}`;
+  const tagCls = `text-[10px] sm:text-xs font-semibold px-3 py-1 rounded-full mb-3 inline-block tracking-wider uppercase ${isDark ? 'bg-white/10 border border-white/20 text-white backdrop-blur-md' : 'bg-black/30 border border-white/20 text-white backdrop-blur-md'}`;
 
   return (
     <section id="gallery" ref={sectionRef} className={`py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden font-sans transition-colors duration-300 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf0] text-[#0d2b0d]'}`}>
@@ -58,21 +69,45 @@ export default function Gallery() {
       <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10 brightness-100 contrast-150 mix-blend-overlay pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16 reveal">
-          <h2 className={`text-4xl sm:text-5xl md:text-6xl font-black tracking-tight mb-6 ${isDark ? 'text-white' : 'text-[#0d2b0d]'}`}>
-            Wildlife of <span className="gradient-text">Yala</span>
-          </h2>
-          <div className="w-20 h-1 bg-gradient-to-r from-emerald-400 to-green-600 rounded-full mx-auto mb-8" />
-          <p className={`max-w-xl mx-auto text-base sm:text-lg leading-relaxed font-light px-2 sm:px-0 ${isDark ? 'text-neutral-400' : 'text-[#4a7a4a]'}`}>
-            Every photo is a memory from our jeep trails — Sri Lankan leopards, Asian elephants, sloth bears, peacocks and more await inside Yala National Park.
+        {/* HEADER */}
+        <div className="mb-10 sm:mb-14 reveal grid lg:grid-cols-[0.95fr_1fr] gap-6 lg:gap-12 items-end">
+          <div>
+            <h2
+              className="text-[2rem] sm:text-[2.6rem] md:text-[3rem] font-black tracking-tight leading-[1.08]"
+              style={{ color: 'var(--text-primary)' }}
+            >
+              Wildlife encounters in<br />
+              <span className="gradient-text">their natural realm.</span>
+            </h2>
+          </div>
+
+          <p
+            className={`text-[15px] sm:text-[15.5px] leading-relaxed font-normal ${isDark ? 'text-white/90' : 'text-emerald-950/85'}`}
+          >
+            Every photo is an authentic memory from our open-top jeep trails Sri Lankan leopards,
+            Asian elephants, sloth bears, and vibrant birds documented across Yala National Park.
           </p>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div className={`reveal gallery-item sm:col-span-2 lg:col-span-2 relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10' : 'border-emerald-300/30'}`}
-            style={{ height: '400px' }} onClick={() => setLightbox(displayImages[0])}>
-            <img src={displayImages[0].src} alt={displayImages[0].title} className="gallery-img w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Card 0: Featured Wide Card */}
+          <div
+            className={`gallery-card-reveal sm:col-span-2 lg:col-span-2 relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10 bg-[#0e1612]' : 'border-emerald-300/30 bg-[#e7f5ea]'}`}
+            style={{ height: '400px' }}
+            data-delay="0"
+            onClick={() => setLightbox(displayImages[0])}
+          >
+            {!loadedImages[displayImages[0].src] && (
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/20 via-emerald-800/15 to-emerald-950/20 animate-pulse pointer-events-none" />
+            )}
+            <img
+              src={displayImages[0].src}
+              alt={displayImages[0].title}
+              loading="lazy"
+              onLoad={() => setLoadedImages((prev) => ({ ...prev, [displayImages[0].src]: true }))}
+              className={`gallery-img-smooth w-full h-full object-cover ${loadedImages[displayImages[0].src] ? 'opacity-100' : 'opacity-0 scale-105'}`}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="absolute bottom-0 left-0 p-6 sm:p-8">
               <span className={tagCls}>{displayImages[0].tag}</span>
               <h3 className="text-white text-2xl sm:text-3xl font-bold tracking-tight mb-2">{displayImages[0].title}</h3>
@@ -86,10 +121,24 @@ export default function Gallery() {
             </div>
           </div>
 
-          <div className={`reveal gallery-item relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10' : 'border-emerald-300/30'}`}
-            style={{ height: '400px' }} onClick={() => setLightbox(displayImages[1])}>
-            <img src={displayImages[1].src} alt={displayImages[1].title} className="gallery-img w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Card 1: Tall Card */}
+          <div
+            className={`gallery-card-reveal relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10 bg-[#0e1612]' : 'border-emerald-300/30 bg-[#e7f5ea]'}`}
+            style={{ height: '400px' }}
+            data-delay="140"
+            onClick={() => setLightbox(displayImages[1])}
+          >
+            {!loadedImages[displayImages[1].src] && (
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/20 via-emerald-800/15 to-emerald-950/20 animate-pulse pointer-events-none" />
+            )}
+            <img
+              src={displayImages[1].src}
+              alt={displayImages[1].title}
+              loading="lazy"
+              onLoad={() => setLoadedImages((prev) => ({ ...prev, [displayImages[1].src]: true }))}
+              className={`gallery-img-smooth w-full h-full object-cover ${loadedImages[displayImages[1].src] ? 'opacity-100' : 'opacity-0 scale-105'}`}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-transparent to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
             <div className="absolute bottom-0 left-0 p-5 sm:p-6">
               <span className={tagCls}>{displayImages[1].tag}</span>
               <h3 className="text-white text-xl font-bold tracking-tight mb-2">{displayImages[1].title}</h3>
@@ -100,11 +149,26 @@ export default function Gallery() {
             </div>
           </div>
 
-          {displayImages.slice(2).map((img) => (
-            <div key={img.title} className={`reveal gallery-item relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10' : 'border-emerald-300/30'}`}
-              style={{ height: '280px' }} onClick={() => setLightbox(img)}>
-              <img src={img.src} alt={img.title} className="gallery-img w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
+          {/* Cards 2, 3, 4: Row 2 with Staggered Cascading Delays */}
+          {displayImages.slice(2).map((img, i) => (
+            <div
+              key={img.title}
+              className={`gallery-card-reveal relative rounded-[2rem] overflow-hidden cursor-pointer group shadow-2xl border ${isDark ? 'border-white/10 bg-[#0e1612]' : 'border-emerald-300/30 bg-[#e7f5ea]'}`}
+              style={{ height: '280px' }}
+              data-delay={i * 120}
+              onClick={() => setLightbox(img)}
+            >
+              {!loadedImages[img.src] && (
+                <div className="absolute inset-0 bg-gradient-to-r from-emerald-950/20 via-emerald-800/15 to-emerald-950/20 animate-pulse pointer-events-none" />
+              )}
+              <img
+                src={img.src}
+                alt={img.title}
+                loading="lazy"
+                onLoad={() => setLoadedImages((prev) => ({ ...prev, [img.src]: true }))}
+                className={`gallery-img-smooth w-full h-full object-cover ${loadedImages[img.src] ? 'opacity-100' : 'opacity-0 scale-105'}`}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-300" />
               <div className="absolute bottom-0 left-0 p-5">
                 <span className={tagCls}>{img.tag}</span>
                 <h3 className="text-white text-lg font-bold tracking-tight mb-1">{img.title}</h3>
@@ -117,15 +181,9 @@ export default function Gallery() {
             </div>
           ))}
         </div>
-
-        <div className="text-center mt-12 reveal px-4 sm:px-0">
-          <button id="gallery-more-btn" onClick={() => document.querySelector('#booking')?.scrollIntoView({ behavior: 'smooth' })}
-            className={`group relative w-full sm:w-auto px-8 py-3.5 sm:py-4 font-semibold text-sm rounded-full overflow-hidden transition-all hover:scale-105 flex items-center justify-center gap-2 mx-auto ${isDark ? 'bg-white/5 border border-white/10 text-white hover:bg-white/10 hover:border-white/20' : 'bg-white border border-emerald-300/40 text-[#166534] hover:bg-emerald-50 hover:border-emerald-400/60 shadow-sm'}`}>
-            Book a Safari & Create Your Own Yala Memory <span className="group-hover:translate-x-1 transition-transform">→</span>
-          </button>
-        </div>
       </div>
 
+      {/* Lightbox Modal */}
       {lightbox && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/95 backdrop-blur-xl p-4 sm:p-8" onClick={() => setLightbox(null)}>
           <div className="relative max-w-5xl w-full rounded-[2rem] overflow-hidden shadow-2xl border border-white/10 bg-[#0a0f0d]" onClick={(e) => e.stopPropagation()}>
@@ -145,3 +203,4 @@ export default function Gallery() {
     </section>
   );
 }
+
