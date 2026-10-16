@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { uploadImage } from '../../utils/cloudinary';
+import { uploadImage, convertImageToWebP } from '../../utils/cloudinary';
 import {
   FiPlus,
   FiTrash2,
@@ -67,12 +67,18 @@ export default function AdminGallery() {
     fetchImages();
   }, []);
 
-  // Handle local file selection
-  const handleFile = (e) => {
+  // Handle local file selection with automatic WebP conversion
+  const handleFile = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
-    const preview = URL.createObjectURL(file);
-    setForm((f) => ({ ...f, file, preview }));
+    try {
+      const webpFile = await convertImageToWebP(file);
+      const preview = URL.createObjectURL(webpFile);
+      setForm((f) => ({ ...f, file: webpFile, preview }));
+    } catch {
+      const preview = URL.createObjectURL(file);
+      setForm((f) => ({ ...f, file, preview }));
+    }
   };
 
   // Convert File to Base64 (fallback if Cloudinary is not configured)
@@ -126,11 +132,13 @@ export default function AdminGallery() {
             publicId = uploadRes.public_id;
           } catch (cloudErr) {
             console.warn('Cloudinary upload failed, falling back to local base64 storage:', cloudErr);
-            finalImageUrl = await fileToBase64(form.file);
+            const webpFile = await convertImageToWebP(form.file);
+            finalImageUrl = await fileToBase64(webpFile);
           }
         } else {
-          // Cloudinary not configured: store as data URL directly in MongoDB
-          finalImageUrl = await fileToBase64(form.file);
+          // Cloudinary not configured: store as WebP data URL directly in MongoDB
+          const webpFile = await convertImageToWebP(form.file);
+          finalImageUrl = await fileToBase64(webpFile);
         }
       }
 
@@ -323,7 +331,7 @@ export default function AdminGallery() {
                         <FiUploadCloud className="w-6 h-6" />
                       </div>
                       <p className="text-xs font-semibold text-white">Click or drag image to upload</p>
-                      <p className="text-[10px] text-neutral-400">Supports JPG, PNG, WEBP (Max 10MB)</p>
+                      <p className="text-[10px] text-neutral-400">Supports JPG, PNG, WEBP (Max 10MB) · Auto-converts to WebP</p>
                     </div>
                   )}
                   <input type="file" accept="image/*" className="hidden" onChange={handleFile} />

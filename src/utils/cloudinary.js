@@ -8,10 +8,69 @@ const CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 const UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
 
 /**
+ * Convert an image File object to WebP format using the browser Canvas API.
+ * Drastically reduces file size while preserving high visual quality.
+ * @param {File} file - Original image file (JPEG, PNG, etc.)
+ * @param {number} quality - Compression quality between 0.1 and 1.0 (default 0.88)
+ * @returns {Promise<File>} - Converted WebP File
+ */
+export function convertImageToWebP(file, quality = 0.88) {
+  return new Promise((resolve) => {
+    // Already WebP, or SVG vector format
+    if (!file || file.type === "image/webp" || file.type === "image/svg+xml") {
+      return resolve(file);
+    }
+
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = img.naturalWidth || img.width;
+        canvas.height = img.naturalHeight || img.height;
+
+        const ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) return resolve(file); // Fallback to original
+            const baseName = file.name ? file.name.replace(/\.[^/.]+$/, "") : "image";
+            const webpFile = new File([blob], `${baseName}.webp`, {
+              type: "image/webp",
+              lastModified: Date.now(),
+            });
+            resolve(webpFile);
+          },
+          "image/webp",
+          quality
+        );
+      } catch (err) {
+        console.warn("Canvas conversion to WebP failed, using original file:", err);
+        resolve(file);
+      }
+    };
+
+    img.onerror = (err) => {
+      URL.revokeObjectURL(objectUrl);
+      console.warn("Image load failed for WebP conversion, using original file:", err);
+      resolve(file);
+    };
+
+    img.src = objectUrl;
+  });
+}
+
+/**
  * Upload a single image file to Cloudinary.
+ * Automatically converts files to WebP format before upload for faster transfers and lower storage.
  * @param {File} file - The image File object from an <input type="file">
  * @param {Object} options - Optional extra params
  * @param {string} options.folder - Cloudinary folder path (e.g. "safari-portal/gallery")
+ * @param {boolean} options.convertToWebP - Whether to convert to WebP (default true)
+ * @param {number} options.quality - WebP quality 0.1-1.0 (default 0.88)
  * @param {Function} options.onProgress - Progress callback (0-100)
  * @returns {Promise<Object>} - Result object with url, public_id, etc.
  */
@@ -22,8 +81,19 @@ export async function uploadImage(file, options = {}) {
     );
   }
 
+  // Automatically convert to WebP before uploading to Cloudinary
+  let fileToUpload = file;
+  if (options.convertToWebP !== false && file instanceof File && file.type !== "image/webp") {
+    try {
+      fileToUpload = await convertImageToWebP(file, options.quality || 0.88);
+    } catch (err) {
+      console.warn("WebP conversion failed, proceeding with original:", err);
+      fileToUpload = file;
+    }
+  }
+
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", fileToUpload);
   formData.append("upload_preset", UPLOAD_PRESET);
 
   if (options.folder) {
@@ -85,9 +155,9 @@ export async function uploadMultipleImages(files, options = {}) {
  * @returns {string} - Transformed Cloudinary URL
  */
 export function getCloudinaryUrl(publicId, transforms = {}) {
-  const { width, height, crop = "fill", quality = "auto" } = transforms;
+  const { width, height, crop = "fill", quality = "auto", format = "webp" } = transforms;
 
-  const parts = [`q_${quality}`];
+  const parts = [`f_${format}`, `q_${quality}`];
   if (width) parts.push(`w_${width}`);
   if (height) parts.push(`h_${height}`);
   if (width || height) parts.push(`c_${crop}`);

@@ -28,6 +28,20 @@ router.get('/', async (req, res) => {
   }
 });
 
+// GET /api/gallery/count — exact image count
+router.get('/count', async (req, res) => {
+  try {
+    let count = await Gallery.countDocuments();
+    if (count === 0) {
+      await Gallery.insertMany(initialSampleImages);
+      count = await Gallery.countDocuments();
+    }
+    res.json({ count });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to count gallery images' });
+  }
+});
+
 // POST /api/gallery — save a new image
 router.post('/', async (req, res) => {
   try {

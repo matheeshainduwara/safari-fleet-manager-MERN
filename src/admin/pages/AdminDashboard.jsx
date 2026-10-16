@@ -1,9 +1,4 @@
-const stats = [
-  { label: 'Total Bookings', value: '128', change: '+12%', up: true, icon: '📅' },
-  { label: 'Gallery Images', value: '24', change: '+3', up: true, icon: '🖼️' },
-  { label: 'Jeep Packages', value: '3', change: 'Active', up: true, icon: '🚙' },
-  { label: 'New Messages', value: '7', change: 'Unread', up: false, icon: '✉️' },
-];
+import { useState, useEffect } from 'react';
 
 const recentBookings = [
   { name: 'James Perera', package: 'Full Day Safari', date: '2026-10-02', guests: 4, status: 'Confirmed' },
@@ -19,6 +14,45 @@ const statusColors = {
 };
 
 export default function AdminDashboard() {
+  const [galleryCount, setGalleryCount] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchGalleryCount() {
+      try {
+        const res = await fetch('/api/gallery/count');
+        const data = await res.json();
+        if (isMounted && typeof data.count === 'number') {
+          setGalleryCount(data.count);
+        }
+      } catch (err) {
+        console.error('Failed to fetch gallery count:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+
+    fetchGalleryCount();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const stats = [
+    { label: 'Total Bookings', value: '128', change: '+12%', up: true, icon: '📅' },
+    {
+      label: 'Gallery Images',
+      value: loading ? '...' : String(galleryCount ?? 0),
+      change: loading ? 'Syncing' : 'MongoDB Live',
+      up: true,
+      icon: '🖼️',
+      href: '/admin/gallery',
+    },
+    { label: 'Jeep Packages', value: '3', change: 'Active', up: true, icon: '🚙' },
+    { label: 'New Messages', value: '7', change: 'Unread', up: false, icon: '✉️' },
+  ];
+
   return (
     <div className="space-y-6">
       {/* Page title */}
@@ -29,18 +63,25 @@ export default function AdminDashboard() {
 
       {/* Stat cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        {stats.map((s) => (
-          <div key={s.label} className="bg-[#0f1712] border border-white/5 rounded-2xl p-5 hover:border-emerald-500/20 transition-all group">
-            <div className="flex items-start justify-between mb-4">
-              <span className="text-2xl">{s.icon}</span>
-              <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${s.up ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
-                {s.change}
-              </span>
-            </div>
-            <p className="text-3xl font-black text-white tracking-tight">{s.value}</p>
-            <p className="text-xs text-neutral-500 mt-1 font-medium">{s.label}</p>
-          </div>
-        ))}
+        {stats.map((s) => {
+          const CardTag = s.href ? 'a' : 'div';
+          return (
+            <CardTag
+              key={s.label}
+              href={s.href}
+              className="bg-[#0f1712] border border-white/5 rounded-2xl p-5 hover:border-emerald-500/20 transition-all group block"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <span className="text-2xl">{s.icon}</span>
+                <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${s.up ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border-amber-500/20'}`}>
+                  {s.change}
+                </span>
+              </div>
+              <p className="text-3xl font-black text-white tracking-tight">{s.value}</p>
+              <p className="text-xs text-neutral-500 mt-1 font-medium">{s.label}</p>
+            </CardTag>
+          );
+        })}
       </div>
 
       {/* Recent bookings table */}

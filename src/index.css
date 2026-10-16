@@ -94,14 +94,31 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-h1, h2, h3 {
+h1,
+h2,
+h3 {
   font-family: 'Playfair Display', serif;
 }
 
 /* ========================
    THEME TRANSITION
    ======================== */
-section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, span, a, li {
+section,
+footer,
+nav,
+div,
+input,
+textarea,
+select,
+button,
+p,
+h1,
+h2,
+h3,
+h4,
+span,
+a,
+li {
   transition: background-color 0.35s ease, color 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
 }
 
@@ -116,8 +133,13 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 }
 
 @keyframes shimmer {
-  0% { background-position: 0% center; }
-  100% { background-position: 200% center; }
+  0% {
+    background-position: 0% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
 }
 
 /* Glassmorphism card */
@@ -151,9 +173,18 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 }
 
 /* Custom scrollbar */
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: var(--bg-primary); }
-::-webkit-scrollbar-thumb { background: #43a047; border-radius: 3px; }
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #43a047;
+  border-radius: 3px;
+}
 
 /* Utility to hide scrollbars completely */
 .no-scrollbar::-webkit-scrollbar {
@@ -161,6 +192,7 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
   width: 0 !important;
   height: 0 !important;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none !important;
   scrollbar-width: none !important;
@@ -172,9 +204,9 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
   opacity: 0;
   transform: translateY(42px) scale(0.97);
   transition: opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.4s ease,
-              border-color 0.4s ease;
+    transform 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease,
+    border-color 0.4s ease;
   will-change: opacity, transform;
 }
 
@@ -189,8 +221,8 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 
 .gallery-img-smooth {
   transition: opacity 0.75s ease-out,
-              transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1),
-              filter 0.5s ease;
+    transform 0.85s cubic-bezier(0.2, 0.8, 0.2, 1),
+    filter 0.5s ease;
   will-change: transform, opacity;
 }
 
@@ -202,6 +234,7 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 .gallery-img {
   transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.5s ease;
 }
+
 .gallery-item:hover .gallery-img {
   transform: scale(1.08);
   filter: brightness(1.1);
@@ -217,9 +250,17 @@ section, footer, nav, div, input, textarea, select, button, p, h1, h2, h3, h4, s
 
 /* Mobile menu slide */
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
 .mobile-menu-open {
   animation: slideDown 0.3s ease forwards;
 }
@@ -253,6 +294,7 @@ select option {
   border: 1px solid var(--border);
   box-shadow: var(--card-shadow);
 }
+
 .theme-card:hover {
   background: var(--bg-card-hover);
   border-color: var(--border-hover);
@@ -264,6 +306,7 @@ select option {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
 }
+
 .theme-glass:hover {
   background: var(--bg-glass-hover);
 }
@@ -273,9 +316,11 @@ select option {
   border: 1px solid var(--border);
   color: var(--text-primary);
 }
+
 .theme-input::placeholder {
   color: var(--placeholder);
 }
+
 .theme-input:focus {
   border-color: #4caf50;
   box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
@@ -286,15 +331,27 @@ select option {
   color: var(--text-muted);
 }
 
-.t-primary { color: var(--text-primary); }
-.t-secondary { color: var(--text-secondary); }
-.t-muted { color: var(--text-muted); }
-.t-faint { color: var(--text-faint); }
+.t-primary {
+  color: var(--text-primary);
+}
+
+.t-secondary {
+  color: var(--text-secondary);
+}
+
+.t-muted {
+  color: var(--text-muted);
+}
+
+.t-faint {
+  color: var(--text-faint);
+}
 
 .btn-primary {
   background: var(--btn-primary-bg);
   color: var(--btn-primary-text);
 }
+
 .btn-primary:hover {
   background: var(--btn-primary-hover);
 }
@@ -304,6 +361,7 @@ select option {
   border: 1px solid var(--btn-outline-border);
   background: transparent;
 }
+
 .btn-outline:hover {
   background: var(--btn-outline-hover-bg);
   border-color: var(--border-hover);
@@ -331,8 +389,7 @@ select option {
 :root:not(.dark) .mix-blend-screen {
   opacity: 0.10 !important;
 }
+
 :root:not(.dark) .mix-blend-overlay {
   opacity: 0.03 !important;
 }
-
-
