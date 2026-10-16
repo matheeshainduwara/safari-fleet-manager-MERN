@@ -2,19 +2,57 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import { FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
 
-const slides = [
+const DEFAULT_SLIDES = [
   { src: '/images/gallery_1.jpg', label: 'Sri Lankan Leopard', sub: 'Yala Block 1' },
   { src: '/images/gallery_2.jpg', label: 'Elephant Bathing', sub: 'Menik River, Yala' },
   { src: '/images/gallery_5.jpg', label: 'Jeep Safari Encounter', sub: 'Yala National Park' },
-  { src: '/images/gallery_4.jpg', label: 'Sloth Bear & Cubs', sub: 'Yala Block 1' },
-  { src: '/images/about.jpg', label: 'Our Safari Jeep', sub: 'Ready for the Wild' },
 ];
 
 export default function Hero() {
   const textRef = useRef(null);
   const { isDark } = useTheme();
+  const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [current, setCurrent] = useState(0);
   const [animating, setAnimating] = useState(false);
+
+  // Fetch dynamic hero slideshow photos from MongoDB
+  useEffect(() => {
+    let isMounted = true;
+    async function fetchHeroSlides() {
+      try {
+        const res = await fetch('/api/gallery/hero');
+        const data = await res.json();
+        if (isMounted && Array.isArray(data) && data.length > 0) {
+          const mapped = data.map((item) => ({
+            src: item.imageUrl || item.src,
+            label: item.title || 'Yala Safari',
+            sub: item.desc || item.tag || 'Yala National Park',
+          }));
+
+          if (mapped.length >= 3) {
+            setSlides(mapped.slice(0, 3));
+          } else {
+            // Pad with defaults if fewer than 3 photos selected
+            const padded = [...mapped];
+            for (const def of DEFAULT_SLIDES) {
+              if (padded.length >= 3) break;
+              if (!padded.some((p) => p.src === def.src)) {
+                padded.push(def);
+              }
+            }
+            setSlides(padded);
+          }
+        }
+      } catch (err) {
+        console.warn('Could not load hero slides, using defaults:', err);
+      }
+    }
+
+    fetchHeroSlides();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const goTo = useCallback((idx) => {
     if (animating) return;
@@ -23,8 +61,8 @@ export default function Hero() {
     setTimeout(() => setAnimating(false), 600);
   }, [animating]);
 
-  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo]);
-  const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo]);
+  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo, slides.length]);
+  const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo, slides.length]);
 
   // Auto-advance every 4 s
   useEffect(() => {

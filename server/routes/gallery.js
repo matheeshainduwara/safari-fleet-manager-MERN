@@ -42,6 +42,60 @@ router.get('/count', async (req, res) => {
   }
 });
 
+// GET /api/gallery/hero — fetch 3 featured hero slideshow images
+router.get('/hero', async (req, res) => {
+  try {
+    let heroImages = await Gallery.find({ featuredInHero: true }).sort({ updatedAt: -1 }).limit(3);
+
+    // If fewer than 3 are explicitly marked, backfill with latest images
+    if (heroImages.length < 3) {
+      const existingIds = heroImages.map((img) => img._id);
+      const extraImages = await Gallery.find({ _id: { $nin: existingIds } })
+        .sort({ createdAt: -1 })
+        .limit(3 - heroImages.length);
+      heroImages = [...heroImages, ...extraImages];
+    }
+
+    // If DB is completely empty, insert initial sample images
+    if (heroImages.length === 0) {
+      await Gallery.insertMany(initialSampleImages);
+      heroImages = await Gallery.find({ featuredInHero: true }).limit(3);
+    }
+
+    res.json(heroImages);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch hero images' });
+  }
+});
+
+// PATCH /api/gallery/:id/toggle-hero — toggle hero selection (max 3 allowed)
+router.patch('/:id/toggle-hero', async (req, res) => {
+  try {
+    const image = await Gallery.findById(req.params.id);
+    if (!image) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+
+    const willBeFeatured = !image.featuredInHero;
+
+    if (willBeFeatured) {
+      const currentHeroCount = await Gallery.countDocuments({ featuredInHero: true });
+      if (currentHeroCount >= 3) {
+        return res.status(400).json({
+          error: 'Maximum 3 photos can be selected for the Hero slideshow. Please uncheck one first.',
+        });
+      }
+    }
+
+    image.featuredInHero = willBeFeatured;
+    await image.save();
+
+    res.json(image);
+  } catch (err) {
+    res.status(500).json({ error: err.message || 'Failed to toggle hero status' });
+  }
+});
+
 // POST /api/gallery — save a new image
 router.post('/', async (req, res) => {
   try {

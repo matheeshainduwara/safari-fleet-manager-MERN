@@ -6,6 +6,7 @@ const GallerySchema = new mongoose.Schema({
   desc:      { type: String, default: '' },
   imageUrl:  { type: String, required: true },   // Cloudinary secure_url or image link
   publicId:  { type: String, default: '' },       // Cloudinary public_id (optional if not on Cloudinary)
+  featuredInHero: { type: Boolean, default: false }, // Featured in home page hero slideshow (max 3)
 }, { timestamps: true });
 
 module.exports = mongoose.model('Gallery', GallerySchema);

@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     {
       label: 'Gallery Images',
       value: loading ? '...' : String(galleryCount ?? 0),
-      change: loading ? 'Syncing' : 'MongoDB Live',
+      change: loading ? 'Syncing' : 'Live',
       up: true,
       icon: '🖼️',
       href: '/admin/gallery',

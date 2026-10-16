@@ -12,15 +12,18 @@ import {
   FiImage,
   FiRefreshCw,
   FiX,
+  FiCheck,
+  FiStar,
 } from 'react-icons/fi';
 
-const TAGS = ['All', 'Leopard', 'Elephants', 'Birds', 'Sloth Bear', 'On Safari', 'Landscape', 'Other'];
+const TAGS = ['All', 'Hero Slides', 'Leopard', 'Elephants', 'Birds', 'Sloth Bear', 'On Safari', 'Landscape', 'Other'];
 
 export default function AdminGallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [togglingHeroId, setTogglingHeroId] = useState(null);
 
   // Filtering & Search
   const [selectedTag, setSelectedTag] = useState('All');
@@ -200,9 +203,47 @@ export default function AdminGallery() {
     }
   };
 
+  // 4. Handle Toggle Hero Slideshow Status (Max 3)
+  const handleToggleHero = async (target) => {
+    if (!target) return;
+    const targetId = target._id || target.id;
+    setTogglingHeroId(targetId);
+    setError('');
+    try {
+      const res = await fetch(`/api/gallery/${targetId}/toggle-hero`, {
+        method: 'PATCH',
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || 'Failed to update hero selection');
+      }
+
+      setImages((prev) =>
+        prev.map((img) => ((img._id || img.id) === targetId ? { ...img, featuredInHero: data.featuredInHero } : img))
+      );
+      setSuccess(
+        data.featuredInHero
+          ? `"${data.title}" selected for Hero slideshow!`
+          : `"${data.title}" removed from Hero slideshow.`
+      );
+      setTimeout(() => setSuccess(''), 3000);
+    } catch (err) {
+      setError(err.message || 'Failed to toggle hero status');
+    } finally {
+      setTogglingHeroId(null);
+    }
+  };
+
+  const heroCount = images.filter((img) => img.featuredInHero).length;
+
   // Filtered list based on search and tag
   const filteredImages = images.filter((img) => {
-    const matchesTag = selectedTag === 'All' || img.tag === selectedTag;
+    const matchesTag =
+      selectedTag === 'All'
+        ? true
+        : selectedTag === 'Hero Slides'
+        ? img.featuredInHero
+        : img.tag === selectedTag;
     const matchesQuery =
       !searchQuery ||
       img.title?.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -218,11 +259,11 @@ export default function AdminGallery() {
           <h1 className="text-2xl font-bold text-white tracking-tight flex items-center gap-2.5">
             <span>Gallery Management</span>
             <span className="text-xs px-2.5 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 font-medium">
-              MongoDB Live
+              Live
             </span>
           </h1>
           <p className="text-xs sm:text-sm text-neutral-400 mt-1">
-            {images.length} images stored in MongoDB Atlas · Manage live photos across the portal
+            {images.length} images stored in the portal
           </p>
         </div>
 
@@ -247,6 +288,44 @@ export default function AdminGallery() {
             <span>{showForm ? 'Close Form' : 'Add New Image'}</span>
           </button>
         </div>
+      </div>
+
+      {/* Hero Slideshow Quick Info Banner */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-[#0f1712] border border-emerald-500/20 shadow-lg">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/25 flex items-center justify-center text-emerald-400 shrink-0 font-bold text-base">
+            <FiStar className="w-5 h-5 text-emerald-400" />
+          </div>
+          <div>
+            <p className="text-xs sm:text-sm font-semibold text-white flex items-center gap-2">
+              <span>Homepage Hero Slideshow</span>
+              <span
+                className={`text-[11px] font-mono px-2 py-0.5 rounded-full border ${
+                  heroCount === 3
+                    ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30'
+                    : 'bg-amber-500/15 text-amber-300 border-amber-500/30'
+                }`}
+              >
+                {heroCount} / 3 selected
+              </span>
+            </p>
+            <p className="text-[11px] text-neutral-400 mt-0.5">
+              Click the checkmark button on any photo to toggle it for the homepage 3-card slideshow (maximum 3 photos).
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setSelectedTag((prev) => (prev === 'Hero Slides' ? 'All' : 'Hero Slides'))}
+          className={`text-xs px-3.5 py-2 rounded-xl font-medium border transition-all shrink-0 ${
+            selectedTag === 'Hero Slides'
+              ? 'bg-emerald-600 text-white border-emerald-500 shadow-sm'
+              : 'bg-white/5 hover:bg-white/10 text-emerald-400 border-emerald-500/20'
+          }`}
+        >
+          {selectedTag === 'Hero Slides' ? 'Show All Photos' : 'Filter Selected (Hero)'}
+        </button>
       </div>
 
       {/* Alert Notices */}
@@ -276,7 +355,7 @@ export default function AdminGallery() {
             <div>
               <h2 className="text-sm sm:text-base font-bold text-white flex items-center gap-2">
                 <FiImage className="w-4 h-4 text-emerald-400" />
-                <span>Save New Image to MongoDB</span>
+                <span>Add New Image</span>
               </h2>
               <p className="text-xs text-neutral-400 mt-0.5">
                 Upload image file or provide direct image URL
@@ -288,9 +367,8 @@ export default function AdminGallery() {
               <button
                 type="button"
                 onClick={() => setUploadMode('file')}
-                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${
-                  uploadMode === 'file' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'text-neutral-400 hover:text-white'
-                }`}
+                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${uploadMode === 'file' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'text-neutral-400 hover:text-white'
+                  }`}
               >
                 <FiUploadCloud className="w-3.5 h-3.5" />
                 <span>Upload File</span>
@@ -298,9 +376,8 @@ export default function AdminGallery() {
               <button
                 type="button"
                 onClick={() => setUploadMode('url')}
-                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${
-                  uploadMode === 'url' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'text-neutral-400 hover:text-white'
-                }`}
+                className={`px-3 py-1 rounded-md transition-all flex items-center gap-1.5 ${uploadMode === 'url' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'text-neutral-400 hover:text-white'
+                  }`}
               >
                 <FiLink className="w-3.5 h-3.5" />
                 <span>Image URL</span>
@@ -313,9 +390,8 @@ export default function AdminGallery() {
             <div className="sm:row-span-3 flex flex-col justify-between">
               {uploadMode === 'file' ? (
                 <label
-                  className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl cursor-pointer transition-all min-h-[220px] h-full relative overflow-hidden ${
-                    form.preview ? 'border-emerald-500/50 bg-black/30' : 'border-white/15 hover:border-emerald-500/40 bg-white/[0.02]'
-                  }`}
+                  className={`flex flex-col items-center justify-center border-2 border-dashed rounded-2xl cursor-pointer transition-all min-h-[220px] h-full relative overflow-hidden ${form.preview ? 'border-emerald-500/50 bg-black/30' : 'border-white/15 hover:border-emerald-500/40 bg-white/[0.02]'
+                    }`}
                 >
                   {form.preview ? (
                     <div className="relative w-full h-full min-h-[220px] flex items-center justify-center">
@@ -442,10 +518,10 @@ export default function AdminGallery() {
                 {uploading ? (
                   <>
                     <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    <span>Saving to MongoDB...</span>
+                    <span>Saving...</span>
                   </>
                 ) : (
-                  <span>Save to MongoDB</span>
+                  <span>Save</span>
                 )}
               </button>
             </div>
@@ -473,11 +549,10 @@ export default function AdminGallery() {
             <button
               key={tag}
               onClick={() => setSelectedTag(tag)}
-              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${
-                selectedTag === tag
-                  ? 'bg-emerald-600 text-white shadow-sm'
-                  : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
-              }`}
+              className={`px-3 py-1.5 rounded-xl text-xs font-medium whitespace-nowrap transition-all ${selectedTag === tag
+                ? 'bg-emerald-600 text-white shadow-sm'
+                : 'bg-white/5 text-neutral-400 hover:text-white hover:bg-white/10'
+                }`}
             >
               {tag}
             </button>
@@ -510,7 +585,11 @@ export default function AdminGallery() {
             return (
               <div
                 key={id}
-                className="group relative bg-[#0f1712] border border-white/10 rounded-2xl overflow-hidden hover:border-emerald-500/40 transition-all flex flex-col justify-between shadow-lg"
+                className={`group relative bg-[#0f1712] border rounded-2xl overflow-hidden transition-all flex flex-col justify-between shadow-lg ${
+                  img.featuredInHero
+                    ? 'border-emerald-500/50 ring-2 ring-emerald-500/40 shadow-emerald-950/40'
+                    : 'border-white/10 hover:border-emerald-500/40'
+                }`}
               >
                 {/* Image Container */}
                 <div className="aspect-square w-full overflow-hidden relative bg-[#080d0a]">
@@ -522,10 +601,33 @@ export default function AdminGallery() {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
 
+                  {/* Hero Slideshow Tick Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleToggleHero(img);
+                    }}
+                    disabled={togglingHeroId === id}
+                    className={`absolute top-2.5 left-2.5 px-2.5 py-1 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all shadow-md active:scale-95 z-10 ${
+                      img.featuredInHero
+                        ? 'bg-emerald-600 text-white opacity-100 shadow-emerald-950/80 ring-1 ring-emerald-400'
+                        : 'bg-black/75 hover:bg-black/95 text-neutral-300 hover:text-white border border-white/20 opacity-0 group-hover:opacity-100'
+                    }`}
+                    title={img.featuredInHero ? 'Untick to remove from Hero slideshow' : 'Tick to show in Hero slideshow'}
+                  >
+                    {togglingHeroId === id ? (
+                      <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <FiCheck className={`w-3.5 h-3.5 ${img.featuredInHero ? 'text-white' : 'text-neutral-400'}`} />
+                    )}
+                    <span>{img.featuredInHero ? 'Hero Slide' : 'Hero'}</span>
+                  </button>
+
                   {/* Delete Button */}
                   <button
                     onClick={() => setDeleteTarget(img)}
-                    className="absolute top-2.5 right-2.5 w-8 h-8 rounded-lg bg-red-600/85 hover:bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md active:scale-95"
+                    className="absolute top-2.5 right-2.5 w-8 h-8 rounded-lg bg-red-600/85 hover:bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all shadow-md active:scale-95 z-10"
                     title="Delete from MongoDB"
                   >
                     <FiTrash2 className="w-4 h-4" />
