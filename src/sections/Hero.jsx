@@ -30,18 +30,20 @@ export default function Hero() {
             sub: item.desc || item.tag || 'Yala National Park',
           }));
 
-          if (mapped.length >= 3) {
-            setSlides(mapped.slice(0, 3));
-          } else {
-            // Pad with defaults if fewer than 3 photos selected
-            const padded = [...mapped];
-            for (const def of DEFAULT_SLIDES) {
-              if (padded.length >= 3) break;
-              if (!padded.some((p) => p.src === def.src)) {
-                padded.push(def);
+          if (mapped.length > 0) {
+            if (mapped.length >= 3 || !Array.isArray(DEFAULT_SLIDES) || DEFAULT_SLIDES.length === 0) {
+              setSlides(mapped.slice(0, 3));
+            } else {
+              // Pad with defaults if fewer than 3 photos selected
+              const padded = [...mapped];
+              for (const def of DEFAULT_SLIDES) {
+                if (padded.length >= 3) break;
+                if (!padded.some((p) => p.src === def.src)) {
+                  padded.push(def);
+                }
               }
+              setSlides(padded);
             }
-            setSlides(padded);
           }
         }
       } catch (err) {
@@ -57,7 +59,7 @@ export default function Hero() {
 
   const goTo = useCallback(
     (idx) => {
-      if (transitioning) return;
+      if (transitioning || slides.length === 0) return;
       setPrevIdx(current);
       setTransitioning(true);
       setCurrent(idx);
@@ -66,19 +68,23 @@ export default function Hero() {
         setTransitioning(false);
       }, 900);
     },
-    [current, transitioning],
+    [current, transitioning, slides.length],
   );
 
   const goNext = useCallback(
-    () => goTo((current + 1) % slides.length),
+    () => {
+      if (slides.length <= 1) return;
+      goTo((current + 1) % slides.length);
+    },
     [current, goTo, slides.length],
   );
 
   // Auto-advance every 4 s
   useEffect(() => {
+    if (slides.length <= 1) return;
     const t = setTimeout(goNext, 4000);
     return () => clearTimeout(t);
-  }, [current, goNext]);
+  }, [current, goNext, slides.length]);
 
   // Entrance animation
   useEffect(() => {

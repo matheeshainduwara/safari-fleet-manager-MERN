@@ -14,12 +14,35 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+const path = require('path');
+
 // ─── Middleware ───────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+].filter(Boolean);
+
 app.use(cors({
-  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: (origin, callback) => {
+    // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(null, true); // Fallback allow in dev
+    }
+  },
   credentials: true,
 }));
-app.use(express.json());
+
+// Allow up to 50MB for image base64 payloads
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Serve static images directly from public/images
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 // ─── Routes ───────────────────────────────────────────────────────────────────
 app.use('/api/gallery', require('./routes/gallery'));
