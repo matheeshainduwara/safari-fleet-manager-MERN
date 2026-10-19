@@ -104,66 +104,47 @@ export default function Hero() {
       id="home"
       className={`relative h-[100dvh] flex items-center overflow-hidden font-sans transition-colors duration-500 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf2] text-[#0d2b0d]'}`}
     >
-      {/* Background Animated Aurora & Mesh Glow */}
+      {/* Background Ambient Depth Glows */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Animated Radial Spotlight behind the cards and content */}
+        {/* Soft atmospheric depth glow behind typography on the left */}
         <div
-          className="absolute inset-0 transition-all duration-700"
+          className="absolute inset-0 transition-opacity duration-700"
           style={{
             background: isDark
-              ? 'radial-gradient(ellipse 95% 65% at 75% 45%, rgba(16, 185, 129, 0.35) 0%, rgba(5, 150, 105, 0.16) 40%, transparent 70%), radial-gradient(ellipse 75% 55% at 15% 30%, rgba(16, 185, 129, 0.25) 0%, transparent 65%)'
-              : 'radial-gradient(ellipse 95% 65% at 75% 45%, rgba(16, 185, 129, 0.42) 0%, rgba(52, 211, 153, 0.2) 40%, transparent 70%), radial-gradient(ellipse 75% 55% at 15% 30%, rgba(5, 150, 105, 0.28) 0%, transparent 65%)',
+              ? 'radial-gradient(circle 540px at 18% 45%, rgba(16, 185, 129, 0.16) 0%, rgba(5, 150, 105, 0.05) 50%, transparent 75%), radial-gradient(ellipse 65% 35% at 55% 100%, rgba(16, 185, 129, 0.15) 0%, transparent 70%)'
+              : 'radial-gradient(circle 540px at 18% 45%, rgba(16, 185, 129, 0.11) 0%, rgba(52, 211, 153, 0.04) 50%, transparent 75%), radial-gradient(ellipse 65% 35% at 55% 100%, rgba(16, 185, 129, 0.09) 0%, transparent 70%)',
           }}
         />
 
-        {/* Animated Aurora Beam layer with feathered radial mask to hide all edges */}
+        {/* Soft breathing accent pulse anchored to the left content zone */}
         <div
-          className="absolute inset-0 overflow-hidden"
+          className={`absolute top-1/2 left-[12%] -translate-y-1/2 w-[460px] h-[460px] rounded-full blur-[130px] pointer-events-none transition-all duration-700 ${
+            isDark ? 'bg-emerald-500/15' : 'bg-emerald-400/10'
+          }`}
           style={{
-            maskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 75%)',
-          }}
-        >
-          <div
-            className={`absolute -inset-[100%] transition-opacity duration-1000 ${isDark ? 'opacity-65 mix-blend-screen' : 'opacity-55 mix-blend-multiply'
-              }`}
-            style={{
-              backgroundImage: isDark
-                ? 'conic-gradient(from 180deg at 50% 50%, rgba(16, 185, 129, 0.35) 0deg, rgba(6, 95, 70, 0.05) 90deg, rgba(52, 211, 153, 0.3) 180deg, rgba(6, 95, 70, 0.05) 270deg, rgba(16, 185, 129, 0.35) 360deg)'
-                : 'conic-gradient(from 180deg at 50% 50%, rgba(16, 185, 129, 0.45) 0deg, rgba(52, 211, 153, 0.1) 90deg, rgba(5, 150, 105, 0.4) 180deg, rgba(52, 211, 153, 0.1) 270deg, rgba(16, 185, 129, 0.45) 360deg)',
-              filter: 'blur(60px)',
-              animation: 'auroraRotate 28s linear infinite',
-            }}
-          />
-        </div>
-
-        {/* Soft breathing pulse behind the center carousel card */}
-        <div
-          className={`absolute top-1/2 right-[12%] -translate-y-1/2 w-[520px] h-[520px] rounded-full blur-[110px] pointer-events-none transition-all duration-700 ${isDark ? 'bg-emerald-500/35' : 'bg-emerald-400/40'
-            }`}
-          style={{
-            animation: 'cardAuraPulse 7s ease-in-out infinite alternate',
+            animation: 'ambientPulse 8s ease-in-out infinite alternate',
           }}
         />
 
-        {/* Enhanced grid texture overlay for depth (feathered to left side) */}
+        {/* Tactile dot grid texture overlay for depth (feathered to left side) */}
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ${isDark ? 'opacity-[0.07]' : 'opacity-[0.06]'
-            }`}
+          className={`absolute inset-0 transition-opacity duration-500 ${
+            isDark ? 'opacity-[0.05]' : 'opacity-[0.04]'
+          }`}
           style={{
             backgroundImage: isDark
               ? 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)'
               : 'radial-gradient(rgba(13,43,13,0.8) 1px, transparent 1px)',
             backgroundSize: '24px 24px',
-            maskImage: 'radial-gradient(ellipse 65% 70% at 25% 45%, black 20%, transparent 75%)',
-            WebkitMaskImage: 'radial-gradient(ellipse 65% 70% at 25% 45%, black 20%, transparent 75%)',
+            maskImage: 'radial-gradient(ellipse 65% 70% at 20% 45%, black 20%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 65% 70% at 20% 45%, black 20%, transparent 75%)',
           }}
         />
       </div>
 
       {/* ── Seamless Blended Wildlife Showcase (Full section bleed, zero hard borders) ── */}
       <div className="hero-image-panel absolute inset-0 w-full h-full select-none pointer-events-none overflow-hidden z-10">
-        {/* Dual-axis smooth feathered mask containers (no mask-composite quirks) */}
+        {/* Dual-axis smooth feathered mask containers */}
         <div className="hero-vertical-mask absolute inset-0 w-full h-full">
           <div className="hero-horizontal-mask absolute inset-0 w-full h-full">
             {/* Stacked images with smooth cross-fade */}
@@ -172,59 +153,60 @@ export default function Hero() {
                 key={slide.src}
                 src={slide.src}
                 alt={slide.label}
-                className="absolute inset-0 w-full h-full object-cover object-center lg:object-[75%_center]"
+                className="absolute inset-0 w-full h-full object-cover object-center lg:object-[82%_center]"
                 style={{
                   opacity: i === current ? 1 : 0,
                   zIndex: i === current ? 2 : i === prevIdx ? 1 : 0,
-                  transform: i === current ? 'scale(1.04)' : 'scale(1)',
-                  transitionProperty: 'opacity, transform',
-                  transitionDuration: '1.2s, 8s',
-                  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1), ease-out',
+                  transform: i === current ? 'scale(1.02)' : 'scale(1)',
+                  filter: isDark ? 'brightness(0.96) contrast(1.04)' : 'brightness(1.01) contrast(1.02) saturate(1.03)',
+                  transitionProperty: 'opacity, transform, filter',
+                  transitionDuration: '1.2s, 8s, 0.5s',
+                  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1), ease-out, ease',
                 }}
               />
             ))}
           </div>
         </div>
 
-        {/* ── Background & Accent Color Blend Overlays (Seamless Emerald + Bg Melt) ── */}
+        {/* ── Modern Seamless Optical Dissolve Overlays ── */}
 
-        {/* 1. Desktop Left Edge: Continuous color mix combining background tone with rich emerald accent glow */}
+        {/* 1. Desktop Left Edge: Clean, modern roll-off with subtle emerald bridge */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none hidden lg:block"
+          className="absolute inset-0 z-10 pointer-events-none hidden lg:block transition-all duration-500"
           style={{
             background: isDark
-              ? 'linear-gradient(to right, #0a0f0d 0%, rgba(10,15,13,0.96) 20%, rgba(6,78,59,0.5) 38%, rgba(16,185,129,0.2) 56%, rgba(10,15,13,0.08) 75%, transparent 92%)'
-              : 'linear-gradient(to right, #f0faf2 0%, rgba(240,250,242,0.96) 20%, rgba(16,185,129,0.35) 38%, rgba(52,211,153,0.18) 56%, rgba(240,250,242,0.08) 75%, transparent 92%)',
+              ? 'linear-gradient(to right, #0a0f0d 0%, #0a0f0d 16%, rgba(10,15,13,0.92) 24%, rgba(6,46,32,0.40) 34%, rgba(16,185,129,0.08) 44%, transparent 54%)'
+              : 'linear-gradient(to right, #f0faf2 0%, #f0faf2 16%, rgba(240,250,242,0.92) 24%, rgba(209,250,229,0.45) 34%, rgba(16,185,129,0.08) 44%, transparent 54%)',
           }}
         />
 
-        {/* 2. Bottom Edge: Melts smoothly into section bottom with emerald accent undertone */}
+        {/* 2. Bottom Edge: Melts smoothly into section bottom and About section with accent underglow */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none"
+          className="absolute inset-0 z-10 pointer-events-none transition-all duration-500"
           style={{
             background: isDark
-              ? 'linear-gradient(to top, #0a0f0d 0%, #0a0f0d 6%, rgba(10,15,13,0.85) 15%, rgba(6,78,59,0.22) 30%, transparent 50%)'
-              : 'linear-gradient(to top, #f0faf2 0%, #f0faf2 6%, rgba(240,250,242,0.85) 15%, rgba(16,185,129,0.2) 30%, transparent 50%)',
+              ? 'linear-gradient(to top, #0a0f0d 0%, rgba(10,15,13,0.95) 5%, rgba(6,78,59,0.32) 14%, rgba(16,185,129,0.10) 22%, transparent 34%)'
+              : 'linear-gradient(to top, #f0faf2 0%, rgba(240,250,242,0.95) 5%, rgba(16,185,129,0.16) 14%, rgba(52,211,153,0.06) 22%, transparent 34%)',
           }}
         />
 
         {/* 3. Top Edge: Soft melt under navbar */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none"
+          className="absolute inset-0 z-10 pointer-events-none transition-all duration-500"
           style={{
             background: isDark
-              ? 'linear-gradient(to bottom, #0a0f0d 0%, rgba(10,15,13,0.75) 8%, transparent 28%)'
-              : 'linear-gradient(to bottom, #f0faf2 0%, rgba(240,250,242,0.75) 8%, transparent 28%)',
+              ? 'linear-gradient(to bottom, #0a0f0d 0%, rgba(10,15,13,0.65) 5%, transparent 16%)'
+              : 'linear-gradient(to bottom, #f0faf2 0%, rgba(240,250,242,0.70) 5%, transparent 16%)',
           }}
         />
 
-        {/* 4. Mobile: Atmospheric wash blending emerald accent with background for legible text */}
+        {/* 4. Mobile: Atmospheric wash keeping typography crystal clear */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none lg:hidden"
+          className="absolute inset-0 z-10 pointer-events-none lg:hidden transition-all duration-500"
           style={{
             background: isDark
-              ? 'linear-gradient(to bottom, rgba(10,15,13,0.92) 0%, rgba(6,78,59,0.6) 40%, rgba(10,15,13,0.85) 75%, #0a0f0d 100%)'
-              : 'linear-gradient(to bottom, rgba(240,250,242,0.92) 0%, rgba(16,185,129,0.45) 40%, rgba(240,250,242,0.88) 75%, #f0faf2 100%)',
+              ? 'linear-gradient(to bottom, rgba(10,15,13,0.95) 0%, rgba(10,15,13,0.74) 38%, rgba(6,78,59,0.30) 68%, #0a0f0d 100%)'
+              : 'linear-gradient(to bottom, rgba(240,250,242,0.96) 0%, rgba(240,250,242,0.76) 38%, rgba(16,185,129,0.15) 68%, #f0faf2 100%)',
           }}
         />
       </div>
@@ -290,21 +272,51 @@ export default function Hero() {
         }
 
         .hero-vertical-mask {
-          -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 8%, black 25%);
-          mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 8%, black 25%);
+          -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 5%, rgba(0,0,0,0.7) 14%, black 26%);
+          mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.2) 5%, rgba(0,0,0,0.7) 14%, black 26%);
         }
 
         @media (min-width: 1024px) {
           .hero-horizontal-mask {
-            -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 22%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.35) 54%, rgba(0,0,0,0.8) 72%, black 90%);
-            mask-image: linear-gradient(to right, transparent 0%, transparent 22%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.35) 54%, rgba(0,0,0,0.8) 72%, black 90%);
+            -webkit-mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              transparent 28%,
+              rgba(0,0,0,0.03) 38%,
+              rgba(0,0,0,0.16) 48%,
+              rgba(0,0,0,0.48) 58%,
+              rgba(0,0,0,0.84) 70%,
+              black 82%
+            );
+            mask-image: linear-gradient(
+              to right,
+              transparent 0%,
+              transparent 28%,
+              rgba(0,0,0,0.03) 38%,
+              rgba(0,0,0,0.16) 48%,
+              rgba(0,0,0,0.48) 58%,
+              rgba(0,0,0,0.84) 70%,
+              black 82%
+            );
           }
         }
 
         @media (max-width: 1023px) {
           .hero-horizontal-mask {
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 35%, black 70%);
-            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 35%, black 70%);
+            -webkit-mask-image: linear-gradient(
+              to bottom,
+              rgba(0,0,0,0.15) 0%,
+              rgba(0,0,0,0.45) 30%,
+              rgba(0,0,0,0.85) 60%,
+              black 85%
+            );
+            mask-image: linear-gradient(
+              to bottom,
+              rgba(0,0,0,0.15) 0%,
+              rgba(0,0,0,0.45) 30%,
+              rgba(0,0,0,0.85) 60%,
+              black 85%
+            );
           }
         }
       `}</style>
