@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
 import { useTheme } from '../context/ThemeContext';
-import { FiImage, FiChevronLeft, FiChevronRight } from 'react-icons/fi';
+import { FiImage } from 'react-icons/fi';
 
 const DEFAULT_SLIDES = [
   { src: '/images/gallery_1.jpg', label: 'Sri Lankan Leopard', sub: 'Yala Block 1' },
   { src: '/images/gallery_2.jpg', label: 'Elephant Bathing', sub: 'Menik River, Yala' },
-  { src: '/images/gallery_5.jpg', label: 'Jeep Safari Encounter', sub: 'Yala National Park' },
+  { src: '/images/gallery_3.jpg', label: 'Jeep Safari Encounter', sub: 'Yala National Park' },
 ];
 
 export default function Hero() {
@@ -13,7 +13,8 @@ export default function Hero() {
   const { isDark } = useTheme();
   const [slides, setSlides] = useState(DEFAULT_SLIDES);
   const [current, setCurrent] = useState(0);
-  const [animating, setAnimating] = useState(false);
+  const [prevIdx, setPrevIdx] = useState(null);
+  const [transitioning, setTransitioning] = useState(false);
 
   // Fetch dynamic hero slideshow photos from MongoDB
   useEffect(() => {
@@ -54,21 +55,30 @@ export default function Hero() {
     };
   }, []);
 
-  const goTo = useCallback((idx) => {
-    if (animating) return;
-    setAnimating(true);
-    setCurrent(idx);
-    setTimeout(() => setAnimating(false), 600);
-  }, [animating]);
+  const goTo = useCallback(
+    (idx) => {
+      if (transitioning) return;
+      setPrevIdx(current);
+      setTransitioning(true);
+      setCurrent(idx);
+      setTimeout(() => {
+        setPrevIdx(null);
+        setTransitioning(false);
+      }, 900);
+    },
+    [current, transitioning],
+  );
 
-  const next = useCallback(() => goTo((current + 1) % slides.length), [current, goTo, slides.length]);
-  const prev = useCallback(() => goTo((current - 1 + slides.length) % slides.length), [current, goTo, slides.length]);
+  const goNext = useCallback(
+    () => goTo((current + 1) % slides.length),
+    [current, goTo, slides.length],
+  );
 
   // Auto-advance every 4 s
   useEffect(() => {
-    const t = setTimeout(next, 4000);
+    const t = setTimeout(goNext, 4000);
     return () => clearTimeout(t);
-  }, [current, next]);
+  }, [current, goNext]);
 
   // Entrance animation
   useEffect(() => {
@@ -86,7 +96,7 @@ export default function Hero() {
   return (
     <section
       id="home"
-      className={`relative min-h-[100dvh] flex items-center overflow-hidden pt-24 pb-16 sm:pt-28 sm:pb-20 lg:pt-28 lg:pb-16 font-sans transition-colors duration-500 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf2] text-[#0d2b0d]'}`}
+      className={`relative h-[100dvh] flex items-center overflow-hidden font-sans transition-colors duration-500 ${isDark ? 'bg-[#0a0f0d] text-white' : 'bg-[#f0faf2] text-[#0d2b0d]'}`}
     >
       {/* Background Animated Aurora & Mesh Glow */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -130,7 +140,7 @@ export default function Hero() {
           }}
         />
 
-        {/* Enhanced grid texture overlay for depth */}
+        {/* Enhanced grid texture overlay for depth (feathered to left side) */}
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${isDark ? 'opacity-[0.07]' : 'opacity-[0.06]'
             }`}
@@ -139,15 +149,86 @@ export default function Hero() {
               ? 'radial-gradient(rgba(255,255,255,0.9) 1px, transparent 1px)'
               : 'radial-gradient(rgba(13,43,13,0.8) 1px, transparent 1px)',
             backgroundSize: '24px 24px',
+            maskImage: 'radial-gradient(ellipse 65% 70% at 25% 45%, black 20%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 65% 70% at 25% 45%, black 20%, transparent 75%)',
           }}
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 w-full py-2 sm:py-4 lg:py-0">
-        <div className="grid lg:grid-cols-2 gap-5 sm:gap-8 lg:gap-10 items-center">
+      {/* ── Seamless Blended Wildlife Showcase (Full section bleed, zero hard borders) ── */}
+      <div className="hero-image-panel absolute inset-0 w-full h-full select-none pointer-events-none overflow-hidden z-10">
+        {/* Dual-axis smooth feathered mask containers (no mask-composite quirks) */}
+        <div className="hero-vertical-mask absolute inset-0 w-full h-full">
+          <div className="hero-horizontal-mask absolute inset-0 w-full h-full">
+            {/* Stacked images with smooth cross-fade */}
+            {slides.map((slide, i) => (
+              <img
+                key={slide.src}
+                src={slide.src}
+                alt={slide.label}
+                className="absolute inset-0 w-full h-full object-cover object-center lg:object-[75%_center]"
+                style={{
+                  opacity: i === current ? 1 : 0,
+                  zIndex: i === current ? 2 : i === prevIdx ? 1 : 0,
+                  transform: i === current ? 'scale(1.04)' : 'scale(1)',
+                  transitionProperty: 'opacity, transform',
+                  transitionDuration: '1.2s, 8s',
+                  transitionTimingFunction: 'cubic-bezier(0.4, 0, 0.2, 1), ease-out',
+                }}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* ── Background & Accent Color Blend Overlays (Seamless Emerald + Bg Melt) ── */}
+
+        {/* 1. Desktop Left Edge: Continuous color mix combining background tone with rich emerald accent glow */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none hidden lg:block"
+          style={{
+            background: isDark
+              ? 'linear-gradient(to right, #0a0f0d 0%, rgba(10,15,13,0.96) 20%, rgba(6,78,59,0.5) 38%, rgba(16,185,129,0.2) 56%, rgba(10,15,13,0.08) 75%, transparent 92%)'
+              : 'linear-gradient(to right, #f0faf2 0%, rgba(240,250,242,0.96) 20%, rgba(16,185,129,0.35) 38%, rgba(52,211,153,0.18) 56%, rgba(240,250,242,0.08) 75%, transparent 92%)',
+          }}
+        />
+
+        {/* 2. Bottom Edge: Melts smoothly into section bottom with emerald accent undertone */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: isDark
+              ? 'linear-gradient(to top, #0a0f0d 0%, #0a0f0d 6%, rgba(10,15,13,0.85) 15%, rgba(6,78,59,0.22) 30%, transparent 50%)'
+              : 'linear-gradient(to top, #f0faf2 0%, #f0faf2 6%, rgba(240,250,242,0.85) 15%, rgba(16,185,129,0.2) 30%, transparent 50%)',
+          }}
+        />
+
+        {/* 3. Top Edge: Soft melt under navbar */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none"
+          style={{
+            background: isDark
+              ? 'linear-gradient(to bottom, #0a0f0d 0%, rgba(10,15,13,0.75) 8%, transparent 28%)'
+              : 'linear-gradient(to bottom, #f0faf2 0%, rgba(240,250,242,0.75) 8%, transparent 28%)',
+          }}
+        />
+
+        {/* 4. Mobile: Atmospheric wash blending emerald accent with background for legible text */}
+        <div
+          className="absolute inset-0 z-10 pointer-events-none lg:hidden"
+          style={{
+            background: isDark
+              ? 'linear-gradient(to bottom, rgba(10,15,13,0.92) 0%, rgba(6,78,59,0.6) 40%, rgba(10,15,13,0.85) 75%, #0a0f0d 100%)'
+              : 'linear-gradient(to bottom, rgba(240,250,242,0.92) 0%, rgba(16,185,129,0.45) 40%, rgba(240,250,242,0.88) 75%, #f0faf2 100%)',
+          }}
+        />
+      </div>
+
+      {/* ── Content Container ── */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 w-full pointer-events-none">
+        <div className="flex items-center h-[100dvh]">
 
           {/* ── Left: Content ── */}
-          <div ref={textRef} className="flex flex-col items-center lg:items-start text-center lg:text-left justify-center py-1 sm:py-4 lg:py-0">
+          <div ref={textRef} className="pointer-events-auto flex flex-col items-center lg:items-start text-center lg:text-left justify-center py-1 sm:py-4 lg:py-0 w-full lg:max-w-[50%] xl:max-w-[46%]">
 
             {/* Badge */}
             <div className={`inline-flex items-center gap-2 self-center lg:self-start px-3.5 py-1.5 rounded-full backdrop-blur-md mb-3.5 sm:mb-5 shadow-sm transition-all ${isDark ? 'bg-emerald-500/15 border border-emerald-500/30 text-emerald-300' : 'bg-emerald-100 border border-emerald-300/80 text-emerald-900'}`}>
@@ -186,153 +267,38 @@ export default function Hero() {
               </button>
             </div>
           </div>
-
-          {/* ── Right: 3-Card Carousel with Smooth Slide Transition ── */}
-          <div className="relative flex items-center justify-center h-[210px] sm:h-[300px] md:h-[360px] lg:h-[410px] w-full max-w-[560px] mx-auto select-none px-2 sm:px-6 mt-4 sm:mt-0 mb-8 sm:mb-12">
-
-            {slides.map((slide, i) => {
-              // Calculate wrapping offset relative to current slide
-              let diff = (i - current) % slides.length;
-              if (diff > Math.floor(slides.length / 2)) diff -= slides.length;
-              if (diff < -Math.floor(slides.length / 2)) diff += slides.length;
-
-              const isCenter = diff === 0;
-              const isPrev = diff === -1;
-              const isNext = diff === 1;
-              const isVisible = Math.abs(diff) <= 1;
-
-              let translateX = '0%';
-              let scale = 1;
-              let opacity = 0;
-              let zIndex = 0;
-
-              if (isCenter) {
-                translateX = '0%';
-                scale = 1;
-                opacity = 1;
-                zIndex = 20;
-              } else if (isPrev) {
-                translateX = '-38%';
-                scale = 0.86;
-                opacity = 0.85;
-                zIndex = 10;
-              } else if (isNext) {
-                translateX = '38%';
-                scale = 0.86;
-                opacity = 0.85;
-                zIndex = 10;
-              } else {
-                translateX = diff < 0 ? '-65%' : '65%';
-                scale = 0.72;
-                opacity = 0;
-                zIndex = 0;
-              }
-
-              return (
-                <div
-                  key={slide.src}
-                  onClick={() => {
-                    if (isPrev) prev();
-                    if (isNext) next();
-                  }}
-                  aria-label={isPrev ? 'Previous photo' : isNext ? 'Next photo' : undefined}
-                  role={!isCenter && isVisible ? 'button' : undefined}
-                  className={`group absolute rounded-xl sm:rounded-2xl lg:rounded-3xl overflow-hidden select-none ${isCenter ? 'cursor-default' : isVisible ? 'cursor-pointer' : 'pointer-events-none'
-                    }`}
-                  style={{
-                    width: '64%',
-                    height: '92%',
-                    transform: `translate3d(${translateX}, 0, 0) scale(${scale})`,
-                    opacity,
-                    zIndex,
-                    boxShadow: isCenter
-                      ? (isDark ? '0 20px 45px rgba(0,0,0,0.85), 0 0 0 1px rgba(255,255,255,0.12)' : '0 20px 45px rgba(0,0,0,0.22), 0 0 0 1px rgba(52,211,153,0.25)')
-                      : (isDark ? '0 15px 30px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.1)' : '0 15px 30px rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.06)'),
-                    transition: 'transform 0.7s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.7s ease',
-                  }}
-                >
-                  <img
-                    src={slide.src}
-                    alt=""
-                    className={`w-full h-full object-cover transition-transform duration-700 ease-out ${isCenter ? 'group-hover:scale-[1.04]' : ''
-                      }`}
-                  />
-                  <div
-                    className={`absolute inset-0 transition-opacity duration-500 ${isCenter
-                        ? 'bg-gradient-to-t from-black/40 via-transparent to-transparent group-hover:opacity-80'
-                        : 'bg-black/30'
-                      }`}
-                  />
-                </div>
-              );
-            })}
-
-            {/* Controls */}
-            <div className="absolute -bottom-10 sm:-bottom-12 left-1/2 -translate-x-1/2 flex items-center gap-3 z-20">
-              <button
-                onClick={prev}
-                aria-label="Previous slide"
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
-                  }`}
-              >
-                <FiChevronLeft className="w-4 h-4" />
-              </button>
-
-              <div className="flex gap-1.5">
-                {slides.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goTo(i)}
-                    aria-label={`Go to slide ${i + 1}`}
-                    className={`rounded-full transition-all duration-300 ${i === current
-                        ? 'w-5 h-1.5 bg-emerald-500'
-                        : isDark
-                          ? 'w-1.5 h-1.5 bg-white/30 hover:bg-white/60'
-                          : 'w-1.5 h-1.5 bg-black/30 hover:bg-black/70'
-                      }`}
-                  />
-                ))}
-              </div>
-
-              <button
-                onClick={next}
-                aria-label="Next slide"
-                className={`w-7 h-7 rounded-full flex items-center justify-center transition-all hover:scale-110 ${isDark ? 'bg-white/10 hover:bg-white/20 text-white' : 'bg-black/10 hover:bg-black/20 text-black'
-                  }`}
-              >
-                <FiChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
         </div>
       </div>
 
       <style>{`
         @keyframes auroraRotate {
-          0% {
-            transform: rotate(0deg) scale(1);
-          }
-          50% {
-            transform: rotate(180deg) scale(1.08);
-          }
-          100% {
-            transform: rotate(360deg) scale(1);
-          }
+          0%   { transform: rotate(0deg)   scale(1); }
+          50%  { transform: rotate(180deg) scale(1.08); }
+          100% { transform: rotate(360deg) scale(1); }
         }
 
         @keyframes cardAuraPulse {
-          0% {
-            transform: translateY(-50%) scale(0.92);
-            opacity: 0.55;
+          0%   { transform: translateY(-50%) scale(0.92); opacity: 0.55; }
+          50%  { transform: translateY(-50%) scale(1.14); opacity: 0.95; }
+          100% { transform: translateY(-50%) scale(1);    opacity: 0.7; }
+        }
+
+        .hero-vertical-mask {
+          -webkit-mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 8%, black 25%);
+          mask-image: linear-gradient(to top, transparent 0%, rgba(0,0,0,0.3) 8%, black 25%);
+        }
+
+        @media (min-width: 1024px) {
+          .hero-horizontal-mask {
+            -webkit-mask-image: linear-gradient(to right, transparent 0%, transparent 22%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.35) 54%, rgba(0,0,0,0.8) 72%, black 90%);
+            mask-image: linear-gradient(to right, transparent 0%, transparent 22%, rgba(0,0,0,0.06) 36%, rgba(0,0,0,0.35) 54%, rgba(0,0,0,0.8) 72%, black 90%);
           }
-          50% {
-            transform: translateY(-50%) scale(1.14);
-            opacity: 0.95;
-          }
-          100% {
-            transform: translateY(-50%) scale(1);
-            opacity: 0.7;
+        }
+
+        @media (max-width: 1023px) {
+          .hero-horizontal-mask {
+            -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 35%, black 70%);
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.45) 35%, black 70%);
           }
         }
       `}</style>

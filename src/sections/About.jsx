@@ -207,7 +207,7 @@ export default function About() {
               style={{ border: '1px solid var(--border)', boxShadow: 'var(--card-shadow)' }}
             >
               <img
-                src="/images/about.jpg"
+                src="/images/about.webp"
                 alt="Safari guide with jeep at Yala National Park, Sri Lanka"
                 className="w-full h-56 sm:h-72 lg:h-[21rem] object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
               />
