@@ -5,6 +5,8 @@ const BookingSchema = new mongoose.Schema({
   email:    { type: String, required: true, trim: true, lowercase: true },
   phone:    { type: String, default: '' },
   package:  { type: String, required: true },
+  jeep:     { type: String, default: '' },
+  timeSlot: { type: String, default: '' },
   date:     { type: String, required: true },
   guests:   { type: Number, required: true, min: 1 },
   hotel:    { type: String, default: '' },

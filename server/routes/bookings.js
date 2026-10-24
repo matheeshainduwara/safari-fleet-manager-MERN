@@ -15,11 +15,22 @@ router.get('/', async (req, res) => {
 // POST /api/bookings — called from frontend Booking form
 router.post('/', async (req, res) => {
   try {
-    const { name, email, phone, package: pkg, date, guests, hotel, message } = req.body;
-    if (!name || !email || !pkg || !date || !guests) {
+    const { name, email, phone, package: pkg, jeep, timeSlot, date, guests, hotel, message } = req.body;
+    if (!name || !email || !date || !guests) {
       return res.status(400).json({ error: 'Missing required fields' });
     }
-    const booking = await Booking.create({ name, email, phone, package: pkg, date, guests, hotel, message });
+    const booking = await Booking.create({
+      name,
+      email,
+      phone,
+      package: pkg || 'Full Day Safari',
+      jeep: jeep || 'Toyota Land Cruiser 70-Series Prado',
+      timeSlot: timeSlot || 'Morning Game Drive',
+      date,
+      guests,
+      hotel,
+      message,
+    });
     res.status(201).json(booking);
   } catch (err) {
     res.status(500).json({ error: 'Failed to create booking' });
